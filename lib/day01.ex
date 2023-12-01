@@ -39,8 +39,9 @@ defmodule Day01.Part2 do
     # Trick : some lines have only one digit. Some numbers overlaps, ex: oneight
     # This is the version without considering this since I would like to test unit testing in elixir for thoses cases
     # I did not find how to capture all overlapping subexpressions in a string yet, will take just first and last probably using lookahead.
-    # digit_expression = "\d|one|two|three|four|five|six|seven|eight|nine"
-    digits = Regex.scan(~r/\d|one|two|three|four|five|six|seven|eight|nine/, line)|> Enum.map(&(Enum.at(&1, 0)))
+    # de : digit expression
+    de = "[[:digit:]]|one|two|three|four|five|six|seven|eight|nine"
+    digits = Regex.scan(~r/#{de}/, line)|> Enum.map(&(Enum.at(&1, 0)))
 
     [head|tail] = digits
 

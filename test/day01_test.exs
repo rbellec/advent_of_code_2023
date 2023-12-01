@@ -18,7 +18,6 @@ defmodule DayO1Test do
   end
 
   test "match lines with one number" do
-
     cases = [ ["two1nine", 29],
       ["4md", 4],
       ["abconeexyz", 1],
