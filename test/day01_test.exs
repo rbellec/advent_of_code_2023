@@ -37,5 +37,4 @@ defmodule DayO1Test do
         assert(Day01.Part2.line_value(line) == result)
       end)
   end
-  # remain overlapping, like oneight
 end
