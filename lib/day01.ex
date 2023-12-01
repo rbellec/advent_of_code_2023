@@ -1,6 +1,6 @@
 defmodule Day01.Part1 do
-  import Pathex
-  import Pathex.Lenses
+  # import Pathex
+  # import Pathex.Lenses
   @moduledoc """
   Documentation for `Day01.Part1`.
   """
@@ -27,6 +27,9 @@ defmodule Day01.Part1 do
 end
 
 defmodule Day01.Part2 do
+  # de : digit expression
+  @de :"[[:digit:]]|one|two|three|four|five|six|seven|eight|nine"
+
   def solve(input) do
     input
     |> String.split("\n", trim: true)
@@ -38,12 +41,12 @@ defmodule Day01.Part2 do
     # Trick : some lines have only one digit in this case it's the first AND last !
     # Some numbers overlaps, ex: oneight
     # I did not find how to capture all overlapping subexpressions in a regexp. Taking first and last is enough.
-    # de : digit expression
+
     de = "[[:digit:]]|one|two|three|four|five|six|seven|eight|nine"
 
     # Match in 2 times. the first occurence, then last occurence after the first letter of the first occurence.
-    [matching_eos, first_digit] = Regex.run(~r/(#{de}).*/, line)
-    eos_match = Regex.run(~r/.*(#{de})/, matching_eos, offset: 1)
+    [matching_eos, first_digit] = Regex.run(~r/(#{@de}).*/, line)
+    eos_match = Regex.run(~r/.*(#{@de})/, matching_eos, offset: 1)
 
     digits = case eos_match do
       nil -> [first_digit, first_digit]
