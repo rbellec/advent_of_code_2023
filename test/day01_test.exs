@@ -1,6 +1,5 @@
 defmodule DayO1Test do
   use ExUnit.Case
-  doctest AdventOfCode2023
 
   test "Part 2 match example lines" do
     cases = [
