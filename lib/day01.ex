@@ -48,10 +48,11 @@ defmodule Day01.Part2 do
     [matching_eos, first_digit] = Regex.run(~r/(#{@de}).*/, line)
     eos_match = Regex.run(~r/.*(#{@de})/, matching_eos, offset: 1)
 
-    digits = case eos_match do
-      nil -> [first_digit, first_digit]
-      [_, second_digit] -> [first_digit, second_digit]
-    end
+    digits =
+      case eos_match do
+        nil -> [first_digit, first_digit]
+        [_, second_digit] -> [first_digit, second_digit]
+      end
 
     digits
     |> Enum.map(&number_to_digit/1)
@@ -74,7 +75,6 @@ defmodule Day01.Part2 do
       _ -> string
     end
   end
-
 end
 
 defmodule Mix.Tasks.Day01 do

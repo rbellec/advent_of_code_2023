@@ -9,12 +9,14 @@ defmodule Day0.Part1 do
   def solve(input) do
     input
     |> parse_input()
+
     # ...
   end
 
   def parse_input(input) do
     input
     |> String.split("\n\n")
+
     # ...
   end
 end
@@ -27,9 +29,9 @@ defmodule Day0.Part2 do
   def solve(input) do
     input
     |> Day0.Part1.parse_input()
+
     # ...
   end
-
 end
 
 defmodule Mix.Tasks.Day0 do
