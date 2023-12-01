@@ -28,5 +28,14 @@ defmodule DayO1Test do
       end)
   end
 
+  test "overlapping alphanumeric numbers" do
+    cases = [ ["oneight", 18],
+      ["eightwo", 82],
+      ["sevenine", 79]]
+
+    Enum.each(cases, fn ([line, result]) ->
+        assert(Day01.Part2.line_value(line) == result)
+      end)
+  end
   # remain overlapping, like oneight
 end
