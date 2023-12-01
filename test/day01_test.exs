@@ -18,10 +18,10 @@ defmodule DayO1Test do
   end
 
   test "match lines with one number" do
-    cases = [ ["two1nine", 29],
-      ["4md", 4],
-      ["abconeexyz", 1],
-      ["xtofour", 4]]
+    cases = [
+      ["4md", 44],
+      ["abconeexyz", 11],
+      ["xtofour", 44]]
 
     Enum.each(cases, fn ([line, result]) ->
         assert(Day01.Part2.line_value(line) == result)

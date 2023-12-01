@@ -35,7 +35,8 @@ defmodule Day01.Part2 do
   end
 
   def line_value(line) do
-    # Trick : some lines have only one digit. Some numbers overlaps, ex: oneight
+    # Trick : some lines have only one digit in this case it's the first AND last !
+    # Some numbers overlaps, ex: oneight
     # I did not find how to capture all overlapping subexpressions in a regexp. Taking first and last is enough.
     # de : digit expression
     de = "[[:digit:]]|one|two|three|four|five|six|seven|eight|nine"
@@ -45,7 +46,7 @@ defmodule Day01.Part2 do
     eos_match = Regex.run(~r/.*(#{de})/, matching_eos, offset: 1)
 
     digits = case eos_match do
-      nil -> [first_digit]
+      nil -> [first_digit, first_digit]
       [_, second_digit] -> [first_digit, second_digit]
     end
 
