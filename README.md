@@ -1,21 +1,4 @@
 # AdventOfCode2023
 
-**TODO: Add description**
-
-## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `advent_of_code_2023` to your list of dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [
-    {:advent_of_code_2023, "~> 0.1.0"}
-  ]
-end
-```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/advent_of_code_2023>.
+I had a love story with Erlang younger and wanted to get back to it. Of course ~we~ I were young and once I grew up and listened to everyone else telling me that Erlang is not a good language for anything, I tries to forget about it. Then Elixir came and doing an AoC in Elixir is a good way to mix fun with a language and fun with AoC (and maybe some learning).
 
