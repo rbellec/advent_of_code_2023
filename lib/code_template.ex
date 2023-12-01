@@ -1,4 +1,7 @@
 defmodule Day0.Part1 do
+  # Try to use Pathex every time ?
+  # import Pathex
+  # import Pathex.Lenses
   @moduledoc """
   Documentation for `Day01.Part1`.
   """
