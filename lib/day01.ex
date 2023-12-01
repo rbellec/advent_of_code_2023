@@ -1,6 +1,6 @@
 defmodule Day01.Part1 do
-  # import Pathex
-  # import Pathex.Lenses
+  import Pathex
+  import Pathex.Lenses
   @moduledoc """
   Documentation for `Day01.Part1`.
   """
@@ -31,21 +31,25 @@ defmodule Day01.Part2 do
     input
     |> String.split("\n", trim: true)
     |> Enum.map(&line_value/1)
-    # |> Enum.join("\n")
     |> Enum.sum()
   end
 
   def line_value(line) do
     # Trick : some lines have only one digit. Some numbers overlaps, ex: oneight
-    # This is the version without considering this since I would like to test unit testing in elixir for thoses cases
-    # I did not find how to capture all overlapping subexpressions in a string yet, will take just first and last probably using lookahead.
+    # I did not find how to capture all overlapping subexpressions in a regexp. Taking first and last is enough.
     # de : digit expression
     de = "[[:digit:]]|one|two|three|four|five|six|seven|eight|nine"
-    digits = Regex.scan(~r/#{de}/, line)|> Enum.map(&(Enum.at(&1, 0)))
 
-    [head|tail] = digits
+    # Match in 2 times. the first occurence, then last occurence after the first letter of the first occurence.
+    [matching_eos, first_digit] = Regex.run(~r/(#{de}).*/, line)
+    eos_match = Regex.run(~r/.*(#{de})/, matching_eos, offset: 1)
 
-    [head, Enum.at(tail, -1)]
+    digits = case eos_match do
+      nil -> [first_digit]
+      [_, second_digit] -> [first_digit, second_digit]
+    end
+
+    digits
     |> Enum.map(&number_to_digit/1)
     |> Enum.join()
     |> String.to_integer()
@@ -80,9 +84,9 @@ defmodule Mix.Tasks.Day01 do
     input_filename = "inputs/day01.txt"
     {:ok, input} = File.read(input_filename)
 
-    # IO.puts("--- Part 1 ---")
-    # IO.puts(Day01.Part1.solve(input))
-    # IO.puts("")
+    IO.puts("--- Part 1 ---")
+    IO.puts(Day01.Part1.solve(input))
+    IO.puts("")
     IO.puts("--- Part 2 ---")
     IO.puts(Day01.Part2.solve(input))
   end
