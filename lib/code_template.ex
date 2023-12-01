@@ -37,7 +37,7 @@ defmodule Mix.Tasks.Day0 do
 
   @spec run(any()) :: :ok
   def run(_) do
-    demo_input = ""
+    _demo_input = ""
 
     input_filename = "inputs/day00.txt"
     # input_filename = "inputs/demo-input.txt"
