@@ -13,8 +13,8 @@ defmodule Day02.GameParser do
   # color = choice([red, green, blue]) |> unwrap_and_tag(:color)
   color = choice([red, green, blue])
 
-  defparsec :color, color
-  defparsec :color_draw, integer(min: 1) |> ignore(space) |> concat(color), debug: false
+  defparsec(:color, color)
+  defparsec(:color_draw, integer(min: 1) |> ignore(space) |> concat(color), debug: false)
 end
 
 defmodule Day02.Part1 do
@@ -31,13 +31,14 @@ defmodule Mix.Tasks.Day02 do
   use Mix.Task
 
   def run(_) do
-    demo_data= """
-Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
-Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
-Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
-Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
-Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
-"""
+    demo_data = """
+    Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
+    Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
+    Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
+    Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
+    Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
+    """
+
     # {:ok, input} = File.read("inputs/demo-input.txt")
 
     # input_filename = "inputs/day02.txt"
