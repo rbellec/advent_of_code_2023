@@ -3,9 +3,9 @@ defmodule Day02.GameParser do
   # Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
 
   space = string(" ")
-  # eol = choice([string("\r\n"), string("\n")])
+  eol = choice([string("\r\n"), string("\n")])
   comma = string(", ")
-  semicolon = string(", ")
+  semicolon = string("; ")
 
   red = string("red") |> replace(:red)
   green = string("green") |> replace(:green)
@@ -13,12 +13,19 @@ defmodule Day02.GameParser do
 
   # color = choice([red, green, blue]) |> unwrap_and_tag(:color)
   color = choice([red, green, blue])
-  color_draw = integer(min: 1) |> ignore(space) |> concat(color) |> ignore(optional(comma)) |> wrap
-  single_draw = times(color_draw, min: 1) |> ignore(optional(semicolon))
+  color_draw = integer(min: 1) |> ignore(space) |> concat(color) |> ignore(optional(comma))
+  single_draw = times(color_draw |> wrap, min: 1) |> ignore(optional(semicolon))
+  game_draws = times((single_draw |> wrap), min: 1)
+
+  game = ignore(string("Game ")) |> integer(min: 1) |> ignore(string(": ")) |> concat(game_draws) |> ignore(optional(eol))
+
+  # Day02.GameParser.game("Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green")
 
   defparsec(:color, color)
   defparsec(:color_draw, color_draw, debug: false)
   defparsec(:single_draw, single_draw)
+  defparsec(:game_draws, game_draws)
+  defparsec(:game, game)
 end
 
 defmodule Day02.Part1 do
