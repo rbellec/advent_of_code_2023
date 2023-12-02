@@ -15,5 +15,11 @@ defmodule DayO2Test do
 
   test "parse color draw" do
     assert(pr(color_draw("10 red")) == [10, :red])
+    assert(pr(color_draw("15 blue, ")) == [15, :blue])
   end
+
+  # test "one draw" do
+  #   assert(pr(single_draw("10 red, 15 blue, 3 green")) == [10, :red])
+  #   assert(pr(color_draw("15 blue, ")) == [15, :blue])
+  # end
 end

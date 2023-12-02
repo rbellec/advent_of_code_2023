@@ -4,7 +4,8 @@ defmodule Day02.GameParser do
 
   space = string(" ")
   # eol = choice([string("\r\n"), string("\n")])
-  # color_draw_sep = ascii_char(",")
+  comma = string(", ")
+  semicolon = string(", ")
 
   red = string("red") |> replace(:red)
   green = string("green") |> replace(:green)
@@ -12,9 +13,12 @@ defmodule Day02.GameParser do
 
   # color = choice([red, green, blue]) |> unwrap_and_tag(:color)
   color = choice([red, green, blue])
+  color_draw = integer(min: 1) |> ignore(space) |> concat(color) |> ignore(optional(comma))
+  single_draw = times(color_draw, min: 1) |> ignore(optional(semicolon))
 
   defparsec(:color, color)
-  defparsec(:color_draw, integer(min: 1) |> ignore(space) |> concat(color), debug: false)
+  defparsec(:color_draw, color_draw, debug: false)
+  defparsec(:single_draw, single_draw)
 end
 
 defmodule Day02.Part1 do
