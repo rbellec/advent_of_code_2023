@@ -48,12 +48,19 @@ defmodule Day02.Part1 do
 
   def solve(games) do
     draws = all() ~> path(:draws) ~> all()
-    # Pathex.over(game, draws, valid_draw/1)
+    valid_draws = all() ~> path(:draws) ~> all()
 
-    # view(games, draws ~> quantities_in_draws)
-    # quantities = view(games, all() ~> path(:draws) ~> all() ~> all() ~> path(:quantity))
-    # path_to_draws =  all ~> path(1)
-    # view(games, all ~> path(1))
+    game_is_valid = fn game ->
+      nil
+    end
+
+    checked_draws_games = Pathex.over!(games, draws, &Day02.Part1.valid_draw(&1))
+
+    over!(checked_draws_games, all(), game_is_valid)
+
+    # view!(checked_draws_games, all() ~> filtering(game_is_valid))
+    valid_games = Enum.filter(checked_draws_games, game_is_valid)
+    view!(valid_games, all() ~> path(:index))
   end
 
   # [[quantity: 1, color: :green], [quantity: 3, color: :red], [quantity: 6, color: :blue]]
@@ -61,6 +68,12 @@ defmodule Day02.Part1 do
     quantities_in_draws = all() ~> path(:quantity)
     total = view!(draw, quantities_in_draws) |> Enum.sum()
     total <= 20
+  end
+
+  def game_is_valid(game) do
+    game
+    |> view!(path(:draws) ~> all())
+    |> Enum.reduce(&(&1 and &2))
   end
 end
 
@@ -101,6 +114,7 @@ defmodule Mix.Tasks.Day02 do
         draw: [[quantity: 2, color: :green]]
       ]
     ]
+
     # IO.puts("")
     # IO.puts("--- Part 2 ---")
     # IO.puts(Day02.Part2.solve(input))

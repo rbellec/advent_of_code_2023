@@ -72,13 +72,30 @@ defmodule DayO2Test do
     # check how to access directly from module.
     quantities_in_draws = all() ~> path(:quantity)
     draw = [[quantity: 1, color: :green], [quantity: 3, color: :red], [quantity: 6, color: :blue]]
-    assert({_, [1, 3, 6]} = Pathex.view(draw, quantities_in_draws) )
+    assert({_, [1, 3, 6]} = Pathex.view(draw, quantities_in_draws))
   end
 
   test "valid draw" do
-    draw_1 = [[quantity: 1, color: :green], [quantity: 3, color: :red], [quantity: 6, color: :blue]]
-    draw_2 = [[quantity: 10, color: :green], [quantity: 30, color: :red], [quantity: 60, color: :blue]]
-    assert(  Day02.Part1.valid_draw(draw_1) )
-    assert( ! Day02.Part1.valid_draw(draw_2) )
+    draw_1 = [
+      [quantity: 1, color: :green],
+      [quantity: 3, color: :red],
+      [quantity: 6, color: :blue]
+    ]
+
+    draw_2 = [
+      [quantity: 10, color: :green],
+      [quantity: 30, color: :red],
+      [quantity: 60, color: :blue]
+    ]
+
+    assert(Day02.Part1.valid_draw(draw_1))
+    assert(!Day02.Part1.valid_draw(draw_2))
+  end
+
+  test "game is valid" do
+    valid_game = [index: 1, draws: [draw: true, draw: true, draw: true]]
+    invalid_game = [index: 1, draws: [draw: true, draw: true, draw: false]]
+    assert(Day02.Part1.game_is_valid(valid_game))
+    assert(!Day02.Part1.game_is_valid(invalid_game))
   end
 end
