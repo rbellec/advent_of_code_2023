@@ -26,9 +26,9 @@ defmodule Day02.GameParser do
 
   game =
     ignore(string("Game "))
-    |> integer(min: 1)
+    |> (integer(min: 1) |> unwrap_and_tag(:index))
     |> ignore(string(": "))
-    |> concat(game_draws |> wrap)
+    |> concat(game_draws)
     |> ignore(optional(eol))
 
   games_list = times(game |> wrap, min: 1) |> eos

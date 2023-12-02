@@ -31,28 +31,38 @@ defmodule DayO2Test do
     assert(pr(single_draw("10 red, 15 blue, 3 green; ")) == draw)
   end
 
-  # Day02.GameParser.single_draw("10 red, 15 blue, 3 green")
-  # test "game draws" do
-  #   game_description = [
-  #     [[3, :blue], [4, :red]],
-  #     [[1, :red], [2, :green], [6, :blue]],
-  #     [[2, :green]]
-  #   ]
+  test "game draws" do
+    game_description = [
+      draws: [
+        draw: [[quantity: 3, color: :blue], [quantity: 4, color: :red]],
+        draw: [
+          [quantity: 1, color: :red],
+          [quantity: 2, color: :green],
+          [quantity: 6, color: :blue]
+        ],
+        draw: [[quantity: 2, color: :green]]
+      ]
+    ]
 
-  #   assert(pr(game_draws("3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green")) == game_description)
-  # end
+    assert(pr(game_draws("3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green")) == game_description)
+  end
 
-  # test "parse game line" do
-  #   game = [
-  #     1,
-  #     [
-  #       [[3, :blue], [4, :red]],
-  #       [[1, :red], [2, :green], [6, :blue]],
-  #       [[2, :green]]
-  #     ]
-  #   ]
+  # Day02.GameParser.game("Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green")
+  test "parse game line" do
+    game = [
+      index: 1,
+      draws: [
+        draw: [[quantity: 3, color: :blue], [quantity: 4, color: :red]],
+        draw: [
+          [quantity: 1, color: :red],
+          [quantity: 2, color: :green],
+          [quantity: 6, color: :blue]
+        ],
+        draw: [[quantity: 2, color: :green]]
+      ]
+    ]
 
-  #   assert(pr(game("Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green")) == game)
-  #   assert(pr(game("Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green\n")) == game)
-  # end
+    assert(pr(game("Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green")) == game)
+    assert(pr(game("Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green\n")) == game)
+  end
 end
