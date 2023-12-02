@@ -75,10 +75,10 @@ defmodule DayO2Test do
     assert({_, [1, 3, 6]} = Pathex.view(draw, quantities_in_draws) )
   end
 
-  # test "valid draw" do
-  #   draw_1 = [[quantity: 1, color: :green], [quantity: 3, color: :red], [quantity: 6, color: :blue]]
-  #   draw_2 = [[quantity: 10, color: :green], [quantity: 30, color: :red], [quantity: 60, color: :blue]]
-  #   assert(  Day02.Part1.valid_draw(draw_1) )
-  #   assert( ! Day02.Part1.valid_draw(draw_2) )
-  # end
+  test "valid draw" do
+    draw_1 = [[quantity: 1, color: :green], [quantity: 3, color: :red], [quantity: 6, color: :blue]]
+    draw_2 = [[quantity: 10, color: :green], [quantity: 30, color: :red], [quantity: 60, color: :blue]]
+    assert(  Day02.Part1.valid_draw(draw_1) )
+    assert( ! Day02.Part1.valid_draw(draw_2) )
+  end
 end

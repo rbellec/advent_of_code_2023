@@ -59,7 +59,8 @@ defmodule Day02.Part1 do
   # [[quantity: 1, color: :green], [quantity: 3, color: :red], [quantity: 6, color: :blue]]
   def valid_draw(draw) do
     quantities_in_draws = all() ~> path(:quantity)
-    view(draw, quantities_in_draws)
+    total = view!(draw, quantities_in_draws) |> Enum.sum()
+    total <= 20
   end
 end
 
