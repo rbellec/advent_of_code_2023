@@ -13,9 +13,16 @@ defmodule Day02.GameParser do
 
   # color = choice([red, green, blue]) |> unwrap_and_tag(:color)
   color = choice([red, green, blue])
-  color_draw = integer(min: 1) |> ignore(space) |> concat(color) |> ignore(optional(comma))
-  single_draw = times(color_draw |> wrap, min: 1) |> ignore(optional(semicolon))
-  game_draws = times(single_draw |> wrap, min: 1)
+  quantity = integer(min: 1) |> unwrap_and_tag(:quantity)
+
+  color_draw =
+    quantity
+    |> ignore(space)
+    |> concat(color |> unwrap_and_tag(:color))
+    |> ignore(optional(comma))
+
+  single_draw = times(color_draw |> wrap, min: 1) |> ignore(optional(semicolon)) |> tag(:draw)
+  game_draws = times(single_draw, min: 1) |> tag(:draws)
 
   game =
     ignore(string("Game "))
@@ -40,7 +47,7 @@ defmodule Day02.Part1 do
   import Pathex.Lenses
 
   def solve(games) do
-    # path_to_draws =  all ~> path(1) 
+    # path_to_draws =  all ~> path(1)
     # view(games, all ~> path(1))
   end
 
