@@ -21,9 +21,10 @@ defmodule Day02.GameParser do
     ignore(string("Game "))
     |> integer(min: 1)
     |> ignore(string(": "))
-    |> concat(game_draws)
+    |> concat(game_draws |> wrap)
     |> ignore(optional(eol))
 
+  games_list = times(game |> wrap, min: 1) |> eos
   # Day02.GameParser.game("Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green")
 
   defparsec(:color, color)
@@ -31,13 +32,20 @@ defmodule Day02.GameParser do
   defparsec(:single_draw, single_draw)
   defparsec(:game_draws, game_draws)
   defparsec(:game, game)
+  defparsec(:games_list, games_list)
 end
 
 defmodule Day02.Part1 do
-  # import Pathex; import Pathex.Lenses
-  def solve(input) do
-    input
+  import Pathex
+  import Pathex.Lenses
+
+  def solve(games) do
+    # path_to_draws =  all ~> path(1) 
+    # view(games, all ~> path(1))
   end
+
+  # def valid_game(draws) do
+  # end
 end
 
 defmodule Day02.Part2 do
@@ -60,6 +68,7 @@ defmodule Mix.Tasks.Day02 do
     # input_filename = "inputs/day02.txt"
     # {:ok, input} = File.read(input_filename)
     input = demo_data
+    games = elem(Day02.GameParser.games_list(input), 1)
 
     IO.puts("--- Part 1 ---")
     IO.puts(Day02.Part1.solve(input))

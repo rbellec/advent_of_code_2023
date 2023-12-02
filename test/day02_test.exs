@@ -39,9 +39,11 @@ defmodule DayO2Test do
   test "parse game line" do
     game = [
       1,
-      [[3, :blue], [4, :red]],
-      [[1, :red], [2, :green], [6, :blue]],
-      [[2, :green]]
+      [
+        [[3, :blue], [4, :red]],
+        [[1, :red], [2, :green], [6, :blue]],
+        [[2, :green]]
+      ]
     ]
 
     assert(pr(game("Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green")) == game)
