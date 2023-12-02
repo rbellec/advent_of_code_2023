@@ -42,8 +42,6 @@ defmodule Day01.Part2 do
     # Some numbers overlaps, ex: oneight
     # I did not find how to capture all overlapping subexpressions in a regexp. Taking first and last is enough.
 
-    de = "[[:digit:]]|one|two|three|four|five|six|seven|eight|nine"
-
     # Match in 2 times. the first occurence, then last occurence after the first letter of the first occurence.
     [matching_eos, first_digit] = Regex.run(~r/(#{@de}).*/, line)
     eos_match = Regex.run(~r/.*(#{@de})/, matching_eos, offset: 1)
