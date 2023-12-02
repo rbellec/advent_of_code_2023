@@ -1,6 +1,8 @@
 defmodule DayO2Test do
   use ExUnit.Case
   import Day02.GameParser
+  import Pathex
+  import Pathex.Lenses
 
   # pr for parse result
   def pr(result_tuple) do
@@ -65,4 +67,18 @@ defmodule DayO2Test do
     assert(pr(game("Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green")) == game)
     assert(pr(game("Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green\n")) == game)
   end
+
+  test "access quantities in draws" do
+    # check how to access directly from module.
+    quantities_in_draws = all() ~> path(:quantity)
+    draw = [[quantity: 1, color: :green], [quantity: 3, color: :red], [quantity: 6, color: :blue]]
+    assert({_, [1, 3, 6]} = Pathex.view(draw, quantities_in_draws) )
+  end
+
+  # test "valid draw" do
+  #   draw_1 = [[quantity: 1, color: :green], [quantity: 3, color: :red], [quantity: 6, color: :blue]]
+  #   draw_2 = [[quantity: 10, color: :green], [quantity: 30, color: :red], [quantity: 60, color: :blue]]
+  #   assert(  Day02.Part1.valid_draw(draw_1) )
+  #   assert( ! Day02.Part1.valid_draw(draw_2) )
+  # end
 end

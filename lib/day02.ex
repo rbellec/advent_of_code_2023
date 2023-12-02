@@ -47,12 +47,20 @@ defmodule Day02.Part1 do
   import Pathex.Lenses
 
   def solve(games) do
+    draws = all() ~> path(:draws) ~> all()
+    # Pathex.over(game, draws, valid_draw/1)
+
+    # view(games, draws ~> quantities_in_draws)
+    # quantities = view(games, all() ~> path(:draws) ~> all() ~> all() ~> path(:quantity))
     # path_to_draws =  all ~> path(1)
     # view(games, all ~> path(1))
   end
 
-  # def valid_game(draws) do
-  # end
+  # [[quantity: 1, color: :green], [quantity: 3, color: :red], [quantity: 6, color: :blue]]
+  def valid_draw(draw) do
+    quantities_in_draws = all() ~> path(:quantity)
+    view(draw, quantities_in_draws)
+  end
 end
 
 defmodule Day02.Part2 do
@@ -79,6 +87,19 @@ defmodule Mix.Tasks.Day02 do
 
     IO.puts("--- Part 1 ---")
     IO.puts(Day02.Part1.solve(input))
+
+    demo_struct = [
+      index: 1,
+      draws: [
+        draw: [[quantity: 3, color: :blue], [quantity: 4, color: :red]],
+        draw: [
+          [quantity: 1, color: :red],
+          [quantity: 2, color: :green],
+          [quantity: 6, color: :blue]
+        ],
+        draw: [[quantity: 2, color: :green]]
+      ]
+    ]
     # IO.puts("")
     # IO.puts("--- Part 2 ---")
     # IO.puts(Day02.Part2.solve(input))
