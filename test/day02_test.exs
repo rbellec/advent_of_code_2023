@@ -20,11 +20,19 @@ defmodule DayO2Test do
 
   test "one draw" do
     assert(pr(single_draw("10 red, 15 blue, 3 green")) == [[10, :red], [15, :blue], [3, :green]])
-    assert(pr(single_draw("10 red, 15 blue, 3 green; ")) == [[10, :red], [15, :blue], [3, :green]])
+
+    assert(
+      pr(single_draw("10 red, 15 blue, 3 green; ")) == [[10, :red], [15, :blue], [3, :green]]
+    )
   end
 
   test "game draws" do
-    game_description = [[[3, :blue], [4, :red]], [[1, :red], [2, :green], [6, :blue]], [[2, :green]]]
+    game_description = [
+      [[3, :blue], [4, :red]],
+      [[1, :red], [2, :green], [6, :blue]],
+      [[2, :green]]
+    ]
+
     assert(pr(game_draws("3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green")) == game_description)
   end
 
@@ -33,7 +41,9 @@ defmodule DayO2Test do
       1,
       [[3, :blue], [4, :red]],
       [[1, :red], [2, :green], [6, :blue]],
-      [[2, :green]]]
+      [[2, :green]]
+    ]
+
     assert(pr(game("Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green")) == game)
     assert(pr(game("Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green\n")) == game)
   end

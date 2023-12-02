@@ -15,9 +15,14 @@ defmodule Day02.GameParser do
   color = choice([red, green, blue])
   color_draw = integer(min: 1) |> ignore(space) |> concat(color) |> ignore(optional(comma))
   single_draw = times(color_draw |> wrap, min: 1) |> ignore(optional(semicolon))
-  game_draws = times((single_draw |> wrap), min: 1)
+  game_draws = times(single_draw |> wrap, min: 1)
 
-  game = ignore(string("Game ")) |> integer(min: 1) |> ignore(string(": ")) |> concat(game_draws) |> ignore(optional(eol))
+  game =
+    ignore(string("Game "))
+    |> integer(min: 1)
+    |> ignore(string(": "))
+    |> concat(game_draws)
+    |> ignore(optional(eol))
 
   # Day02.GameParser.game("Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green")
 
