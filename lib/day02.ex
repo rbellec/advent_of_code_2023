@@ -13,7 +13,7 @@ defmodule Day02.GameParser do
 
   # color = choice([red, green, blue]) |> unwrap_and_tag(:color)
   color = choice([red, green, blue])
-  color_draw = integer(min: 1) |> ignore(space) |> concat(color) |> ignore(optional(comma))
+  color_draw = integer(min: 1) |> ignore(space) |> concat(color) |> ignore(optional(comma)) |> wrap
   single_draw = times(color_draw, min: 1) |> ignore(optional(semicolon))
 
   defparsec(:color, color)
