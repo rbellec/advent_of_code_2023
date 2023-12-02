@@ -1,22 +1,20 @@
 defmodule Day02.GameParser do
   import NimbleParsec
-
   # Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
 
-  # sp = ignore(ascii_char(" "))
+  space = string(" ")
   # eol = choice([string("\r\n"), string("\n")])
   # color_draw_sep = ascii_char(",")
 
+  red = string("red") |> replace(:red)
+  green = string("green") |> replace(:green)
+  blue = string("blue") |> replace(:blue)
 
-  red = string("red")
-  green = string("green")
-  blue = string("blue")
-
-  color = choice([red, green, blue]) |> unwrap_and_tag(:color)
+  # color = choice([red, green, blue]) |> unwrap_and_tag(:color)
+  color = choice([red, green, blue])
 
   defparsec :color, color
-
-  # defparsec :color_draw, integer |> space |> color, debug: true
+  defparsec :color_draw, integer(min: 1) |> ignore(space) |> concat(color), debug: false
 end
 
 defmodule Day02.Part1 do
