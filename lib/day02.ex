@@ -48,23 +48,18 @@ defmodule Day02.Part1 do
 
   def solve(games) do
     draws = all() ~> path(:draws) ~> all()
-    valid_draws = all() ~> path(:draws) ~> all()
+    checked_draws_games = Pathex.over!(games, draws, &validate_draw/1)
 
-    game_is_valid = fn game ->
-      nil
-    end
-
-    checked_draws_games = Pathex.over!(games, draws, &Day02.Part1.valid_draw(&1))
-
-    over!(checked_draws_games, all(), game_is_valid)
-
+    # TODO: test with filtering view later.
     # view!(checked_draws_games, all() ~> filtering(game_is_valid))
-    valid_games = Enum.filter(checked_draws_games, game_is_valid)
-    view!(valid_games, all() ~> path(:index))
+    checked_draws_games
+    |> Enum.filter(&game_is_valid/1)
+    |> view!(all() ~> path(:index))
+    |> Enum.sum()
   end
 
   # [[quantity: 1, color: :green], [quantity: 3, color: :red], [quantity: 6, color: :blue]]
-  def valid_draw(draw) do
+  def validate_draw(draw) do
     quantities_in_draws = all() ~> path(:quantity)
     total = view!(draw, quantities_in_draws) |> Enum.sum()
     total <= 20
@@ -94,26 +89,13 @@ defmodule Mix.Tasks.Day02 do
 
     # {:ok, input} = File.read("inputs/demo-input.txt")
 
-    # input_filename = "inputs/day02.txt"
-    # {:ok, input} = File.read(input_filename)
-    input = demo_data
+    input_filename = "inputs/day02.txt"
+    {:ok, input} = File.read(input_filename)
+    # input = demo_data
     games = elem(Day02.GameParser.games_list(input), 1)
 
     IO.puts("--- Part 1 ---")
-    IO.puts(Day02.Part1.solve(input))
-
-    demo_struct = [
-      index: 1,
-      draws: [
-        draw: [[quantity: 3, color: :blue], [quantity: 4, color: :red]],
-        draw: [
-          [quantity: 1, color: :red],
-          [quantity: 2, color: :green],
-          [quantity: 6, color: :blue]
-        ],
-        draw: [[quantity: 2, color: :green]]
-      ]
-    ]
+    IO.puts(to_string(Day02.Part1.solve(games)))
 
     # IO.puts("")
     # IO.puts("--- Part 2 ---")
