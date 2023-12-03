@@ -1,4 +1,5 @@
 defmodule Day02.GameParser do
+  # Input parser
   import NimbleParsec
   # Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
 
@@ -50,7 +51,7 @@ defmodule Day02.Part1 do
     draws = all() ~> path(:draws) ~> all()
     checked_draws_games = Pathex.over!(games, draws, &validate_draw/1)
 
-    # TODO: test with filtering view later.
+    # To test filtering views & play with this later :
     # view!(checked_draws_games, star() ~> filtering(game_is_valid))
     checked_draws_games
     # |> view!(star() ~> filtering(game_is_valid))
