@@ -62,9 +62,9 @@ defmodule Day02.Part1 do
   # [[quantity: 1, color: :green], [quantity: 3, color: :red], [quantity: 6, color: :blue]]
   def validate_draw(draw) do
     validate_color = fn
-      [quantity: r, color: :red] -> (r <= 12)
-      [quantity: g, color: :green] -> (g <= 13)
-      [quantity: b, color: :blue] -> (b <= 14)
+      [quantity: r, color: :red] -> r <= 12
+      [quantity: g, color: :green] -> g <= 13
+      [quantity: b, color: :blue] -> b <= 14
     end
 
     over!(draw, all(), validate_color)
@@ -82,10 +82,7 @@ defmodule Day02.Part2 do
   import Pathex
   import Pathex.Lenses
 
-
-
   def solve(games) do
-
     game = [
       index: 1,
       draws: [
@@ -99,9 +96,6 @@ defmodule Day02.Part2 do
       ]
     ]
 
-
-
-
     draws = all() ~> path(:draws) ~> all()
     # checked_draws_games = Pathex.over!(games, draws, &validate_draw/1)
     view!(games, all() ~> path(:draws) ~> all())
@@ -111,11 +105,11 @@ defmodule Day02.Part2 do
     draw_of_color = path(:draws) ~> star() ~> star() ~> matching([_, color: ^color])
 
     game
-    |> view!(draw_of_color) |> view!(all() ~> all() ~> path(:quantity)) |> List.flatten |> Enum.max
+    |> view!(draw_of_color)
+    |> view!(all() ~> all() ~> path(:quantity))
+    |> List.flatten()
+    |> Enum.max()
   end
-
-
-
 end
 
 defmodule Mix.Tasks.Day02 do

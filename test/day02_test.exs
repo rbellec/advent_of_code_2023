@@ -118,6 +118,4 @@ defmodule DayO2Test do
     assert(Day02.Part2.get_max_qtt_for_color(game, :green) == 2)
     assert(Day02.Part2.get_max_qtt_for_color(game, :blue) == 6)
   end
-
-
 end
