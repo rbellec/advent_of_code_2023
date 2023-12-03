@@ -51,8 +51,9 @@ defmodule Day02.Part1 do
     checked_draws_games = Pathex.over!(games, draws, &validate_draw/1)
 
     # TODO: test with filtering view later.
-    # view!(checked_draws_games, all() ~> filtering(game_is_valid))
+    # view!(checked_draws_games, star() ~> filtering(game_is_valid))
     checked_draws_games
+    # |> view!(star() ~> filtering(game_is_valid))
     |> Enum.filter(&game_is_valid/1)
     |> view!(all() ~> path(:index))
     |> Enum.sum()
@@ -78,6 +79,43 @@ defmodule Day02.Part1 do
 end
 
 defmodule Day02.Part2 do
+  import Pathex
+  import Pathex.Lenses
+
+
+
+  def solve(games) do
+
+    game = [
+      index: 1,
+      draws: [
+        draw: [[quantity: 3, color: :blue], [quantity: 4, color: :red]],
+        draw: [
+          [quantity: 1, color: :red],
+          [quantity: 2, color: :green],
+          [quantity: 6, color: :blue]
+        ],
+        draw: [[quantity: 2, color: :green]]
+      ]
+    ]
+
+
+
+
+    draws = all() ~> path(:draws) ~> all()
+    # checked_draws_games = Pathex.over!(games, draws, &validate_draw/1)
+    view!(games, all() ~> path(:draws) ~> all())
+  end
+
+  def get_max_qtt_for_color(game, color) do
+    draw_of_color = path(:draws) ~> star() ~> star() ~> matching([_, color: ^color])
+
+    game
+    |> view!(draw_of_color) |> view!(all() ~> all() ~> path(:quantity)) |> List.flatten |> Enum.max
+  end
+
+
+
 end
 
 defmodule Mix.Tasks.Day02 do
@@ -94,9 +132,9 @@ defmodule Mix.Tasks.Day02 do
 
     # {:ok, input} = File.read("inputs/demo-input.txt")
 
-    input_filename = "inputs/day02.txt"
-    {:ok, input} = File.read(input_filename)
-    # input = demo_data
+    # input_filename = "inputs/day02.txt"
+    # {:ok, input} = File.read(input_filename)
+    input = demo_data
     games = elem(Day02.GameParser.games_list(input), 1)
 
     IO.puts("--- Part 1 ---")

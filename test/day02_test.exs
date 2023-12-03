@@ -100,10 +100,24 @@ defmodule DayO2Test do
     assert(!Day02.Part1.validate_draw(invalid_draw_1))
   end
 
-  test "game is valid" do
-    valid_game = [index: 1, draws: [draw: true, draw: true, draw: true]]
-    invalid_game = [index: 1, draws: [draw: true, draw: true, draw: false]]
-    assert(Day02.Part1.game_is_valid(valid_game))
-    assert(!Day02.Part1.game_is_valid(invalid_game))
+  test "solve part 2 game" do
+    game = [
+      index: 1,
+      draws: [
+        draw: [[quantity: 3, color: :blue], [quantity: 4, color: :red]],
+        draw: [
+          [quantity: 1, color: :red],
+          [quantity: 2, color: :green],
+          [quantity: 6, color: :blue]
+        ],
+        draw: [[quantity: 2, color: :green]]
+      ]
+    ]
+
+    assert(Day02.Part2.get_max_qtt_for_color(game, :red) == 4)
+    assert(Day02.Part2.get_max_qtt_for_color(game, :green) == 2)
+    assert(Day02.Part2.get_max_qtt_for_color(game, :blue) == 6)
   end
+
+
 end
