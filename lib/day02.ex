@@ -60,9 +60,14 @@ defmodule Day02.Part1 do
 
   # [[quantity: 1, color: :green], [quantity: 3, color: :red], [quantity: 6, color: :blue]]
   def validate_draw(draw) do
-    quantities_in_draws = all() ~> path(:quantity)
-    total = view!(draw, quantities_in_draws) |> Enum.sum()
-    total <= 20
+    validate_color = fn
+      [quantity: r, color: :red] -> (r <= 12)
+      [quantity: g, color: :green] -> (g <= 13)
+      [quantity: b, color: :blue] -> (b <= 14)
+    end
+
+    over!(draw, all(), validate_color)
+    |> Enum.reduce(&(&1 and &2))
   end
 
   def game_is_valid(game) do

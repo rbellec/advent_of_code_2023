@@ -75,6 +75,7 @@ defmodule DayO2Test do
     assert({_, [1, 3, 6]} = Pathex.view(draw, quantities_in_draws))
   end
 
+  # only 12 red cubes, 13 green cubes, and 14 blue cubes?
   test "valid draw" do
     draw_1 = [
       [quantity: 1, color: :green],
@@ -82,14 +83,21 @@ defmodule DayO2Test do
       [quantity: 6, color: :blue]
     ]
 
-    draw_2 = [
-      [quantity: 10, color: :green],
-      [quantity: 30, color: :red],
-      [quantity: 60, color: :blue]
+    valid_draw_2 = [
+      [quantity: 12, color: :red],
+      [quantity: 13, color: :green],
+      [quantity: 14, color: :blue]
     ]
 
-    assert(Day02.Part1.valid_draw(draw_1))
-    assert(!Day02.Part1.valid_draw(draw_2))
+    invalid_draw_1 = [
+      [quantity: 13, color: :red],
+      [quantity: 13, color: :green],
+      [quantity: 14, color: :blue]
+    ]
+
+    assert(Day02.Part1.validate_draw(draw_1))
+    assert(Day02.Part1.validate_draw(valid_draw_2))
+    assert(!Day02.Part1.validate_draw(invalid_draw_1))
   end
 
   test "game is valid" do
