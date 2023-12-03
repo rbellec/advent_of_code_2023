@@ -83,25 +83,20 @@ defmodule Day02.Part2 do
   import Pathex.Lenses
 
   def solve(games) do
-    game = [
-      index: 1,
-      draws: [
-        draw: [[quantity: 3, color: :blue], [quantity: 4, color: :red]],
-        draw: [
-          [quantity: 1, color: :red],
-          [quantity: 2, color: :green],
-          [quantity: 6, color: :blue]
-        ],
-        draw: [[quantity: 2, color: :green]]
-      ]
-    ]
+
 
     draws = all() ~> path(:draws) ~> all()
     # checked_draws_games = Pathex.over!(games, draws, &validate_draw/1)
     view!(games, all() ~> path(:draws) ~> all())
   end
 
-  def power_set_for(game) do
+  def power_number(game) do
+    game
+    |> power_set
+    |> Enum.reduce(&(&1 * &2))
+  end
+
+  def power_set(game) do
     [:red, :green, :blue]
     |> Enum.map(&get_max_qtt_for_color(game, &1))
   end
