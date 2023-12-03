@@ -83,11 +83,9 @@ defmodule Day02.Part2 do
   import Pathex.Lenses
 
   def solve(games) do
-
-
-    draws = all() ~> path(:draws) ~> all()
-    # checked_draws_games = Pathex.over!(games, draws, &validate_draw/1)
-    view!(games, all() ~> path(:draws) ~> all())
+    games
+    |> over!(all(), &power_number/1) # Validated for demo
+    |> Enum.sum()
   end
 
   def power_number(game) do
@@ -134,8 +132,8 @@ defmodule Mix.Tasks.Day02 do
     IO.puts("--- Part 1 ---")
     IO.puts(to_string(Day02.Part1.solve(games)))
 
-    # IO.puts("")
-    # IO.puts("--- Part 2 ---")
-    # IO.puts(Day02.Part2.solve(input))
+    IO.puts("")
+    IO.puts("--- Part 2 ---")
+    IO.puts(inspect(Day02.Part2.solve(games)))
   end
 end
