@@ -84,7 +84,8 @@ defmodule Day02.Part2 do
 
   def solve(games) do
     games
-    |> over!(all(), &power_number/1) # Validated for demo
+    # Validated for demo
+    |> over!(all(), &power_number/1)
     |> Enum.sum()
   end
 
@@ -114,7 +115,7 @@ defmodule Mix.Tasks.Day02 do
   use Mix.Task
 
   def run(_) do
-    demo_data = """
+    _demo_data = """
     Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
     Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
     Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
