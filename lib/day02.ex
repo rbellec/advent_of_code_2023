@@ -124,9 +124,9 @@ defmodule Mix.Tasks.Day02 do
 
     # {:ok, input} = File.read("inputs/demo-input.txt")
 
-    # input_filename = "inputs/day02.txt"
-    # {:ok, input} = File.read(input_filename)
-    input = demo_data
+    input_filename = "inputs/day02.txt"
+    {:ok, input} = File.read(input_filename)
+    # input = demo_data
     games = elem(Day02.GameParser.games_list(input), 1)
 
     IO.puts("--- Part 1 ---")
