@@ -101,6 +101,11 @@ defmodule Day02.Part2 do
     view!(games, all() ~> path(:draws) ~> all())
   end
 
+  def power_set_for(game) do
+    [:red, :green, :blue]
+    |> Enum.map(&get_max_qtt_for_color(game, &1))
+  end
+
   def get_max_qtt_for_color(game, color) do
     draw_of_color = path(:draws) ~> star() ~> star() ~> matching([_, color: ^color])
 

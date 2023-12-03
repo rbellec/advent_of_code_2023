@@ -117,5 +117,7 @@ defmodule DayO2Test do
     assert(Day02.Part2.get_max_qtt_for_color(game, :red) == 4)
     assert(Day02.Part2.get_max_qtt_for_color(game, :green) == 2)
     assert(Day02.Part2.get_max_qtt_for_color(game, :blue) == 6)
+
+    assert(Day02.Part2.power_set_for(game) == [4, 2, 6])
   end
 end
