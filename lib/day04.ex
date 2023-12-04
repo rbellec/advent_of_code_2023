@@ -20,12 +20,13 @@ defmodule Day04.Parser do
     ignore(string("Card "))
     |> (integer(min: 1) |> unwrap_and_tag(:index))
     |> ignore(colon)
-    |> concat((times(number, min: 1) |> tag(:winnings)))
+    |> concat(times(number, min: 1) |> tag(:winnings))
     |> ignore(pipe_sep)
     |> concat(times(number, min: 1) |> tag(:your_draw))
     |> ignore(optional(eol))
 
-  game = times(line |> wrap, min: 1) |> map(:to_map) |> eos # Ok
+  # Ok
+  game = times(line |> wrap, min: 1) |> map(:to_map) |> eos
 
   defparsec(:line, line)
   defparsec(:game, game)
@@ -41,16 +42,24 @@ defmodule Day04.Part1 do
 
   def solve(input) do
     input
-    |> parse_input()
-
-    # ...
+    |> Day04.Parser.game()
+    |> elem(1)
+    |> Enum.map(&score_game/1)
   end
 
-  def parse_input(input) do
-    input
-    |> String.split("\n\n")
+  def score_game(game_map) do
+    # elements may be present multiple times ?
+    winnings = MapSet.new(game_map.winnings)
 
-    # ...
+    game_map.your_draw
+    |> Enum.map(fn elem ->
+      if MapSet.member?(winnings, elem) do
+        1
+      else
+        0
+      end
+    end)
+    |> Enum.sum()
   end
 end
 

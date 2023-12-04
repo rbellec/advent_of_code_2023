@@ -26,19 +26,29 @@ defmodule DayO4Test do
 
   describe "Day 04 parsing" do
     test "Parse a line", context do
-      expected = [index: 1, winnings: [41, 48, 83, 86, 17], your_draw: [83, 86, 6, 31, 17, 9, 48, 53]]
+      expected = [
+        index: 1,
+        winnings: [41, 48, 83, 86, 17],
+        your_draw: [83, 86, 6, 31, 17, 9, 48, 53]
+      ]
+
       assert(expected == elem(Day04.Parser.line(context[:input_line]), 1))
     end
 
     test "parse line with space before first int", context do
       test_line = "Card 3:  1 21 53 59 44 | 69 82 63 72 16 21 14  1"
-      expected = [index: 3, winnings: [1, 21, 53, 59, 44], your_draw: [69, 82, 63, 72, 16, 21, 14, 1]]
+
+      expected = [
+        index: 3,
+        winnings: [1, 21, 53, 59, 44],
+        your_draw: [69, 82, 63, 72, 16, 21, 14, 1]
+      ]
 
       assert(expected == elem(Day04.Parser.line(test_line), 1))
     end
 
     test "parse demo data", context do
-      expected =  [
+      expected = [
         %{
           index: 1,
           winnings: [41, 48, 83, 86, 17],
@@ -66,7 +76,17 @@ defmodule DayO4Test do
           your_draw: [74, 77, 10, 23, 35, 67, 36, 11]
         }
       ]
+
       assert(expected == elem(Day04.Parser.game(context[:demo_input_aoc]), 1))
+    end
+  end
+
+  describe "Day 04 solving" do
+    import Day04.Part1
+    test "number_won_per_games", context do
+      scores = [4, 2, 2, 1, 0, 0]
+      results = Day04.Parser.game(context[:demo_input_aoc]) |> elem(1) |> Enum.map(&score_game/1)
+      assert(scores == results)
     end
   end
 end
