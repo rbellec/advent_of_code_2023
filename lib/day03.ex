@@ -112,7 +112,6 @@ end
 defmodule Day03.Part2 do
   import Pathex
   import Pathex.Lenses
-  import Day03.Part1
   import Day03.Parser
 
   def solve(input) do
