@@ -5,11 +5,15 @@
 defmodule Day04.Parser do
   import NimbleParsec
 
+  def to_map(list) do
+    Enum.into(list, %{})
+  end
+
   spaces = times(string(" "), min: 1)
   eol = choice([string("\r\n"), string("\n")])
   pipe_sep = string("|") |> ignore(spaces)
   colon = string(":") |> ignore(spaces)
-  number = integer(min: 1) |> ignore(spaces)
+  number = integer(min: 1) |> ignore(choice([spaces, eol]))
 
   line =
     ignore(string("Card "))
@@ -20,15 +24,11 @@ defmodule Day04.Parser do
     |> concat(times(number, min: 1) |> tag(:your_draw))
     |> ignore(optional(eol))
 
-  # game = line |> reduce({Enum, :into, %{}})
-
-  file_parser = times(line |> wrap, min: 1) |> eos
+  game = times(line |> wrap, min: 1) |> map(:to_map) |> eos # Ok
 
   defparsec(:line, line)
-  defparsec(:file_parser, file_parser)
+  defparsec(:game, game)
 end
-
-# Day04.Parser.line("Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53")
 
 defmodule Day04.Part1 do
   # Try to use Pathex every time ?
