@@ -91,7 +91,7 @@ defmodule DayO4Test do
     end
 
     test "solve part 1 demo", context do
-      assert( 13 == Day04.Part1.solve(context[:demo_input_aoc]) )
+      assert(13 == Day04.Part1.solve(context[:demo_input_aoc]))
     end
   end
 end

@@ -17,8 +17,8 @@ defmodule Day04.Parser do
   number = ignore(spaces) |> integer(min: 1)
 
   line =
-    ignore(string("Card "))
-    |> (integer(min: 1) |> unwrap_and_tag(:index))
+    ignore(string("Card"))
+    |> (concat(number) |> unwrap_and_tag(:index))
     |> ignore(colon)
     |> concat(times(number, min: 1) |> tag(:winnings))
     |> ignore(pipe_sep)
@@ -89,13 +89,13 @@ defmodule Mix.Tasks.Day04 do
 
   @spec run(any()) :: :ok
   def run(_) do
-    input_filename = "inputs/day00.txt"
+    input_filename = "inputs/day04.txt"
     {:ok, input} = File.read(input_filename)
 
     IO.puts("--- Part 1 ---")
     IO.puts(Day04.Part1.solve(input))
     IO.puts("")
-    IO.puts("--- Part 2 ---")
-    IO.puts(Day04.Part2.solve(input))
+    # IO.puts("--- Part 2 ---")
+    # IO.puts(Day04.Part2.solve(input))
   end
 end
