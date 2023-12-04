@@ -75,30 +75,42 @@ defmodule Day04.Part1 do
 end
 
 defmodule Day04.Part2 do
-  # def solve(input) do
-  #   games =
-  #     Day04.Parser.game(input)
-  #     |> elem(1)
-  #     |> Enum.map(&score_game_2/1)
-  # end
+  def solve(input) do
+    games =
+      Day04.Parser.game(input)
+      |> elem(1)
+      |> Enum.map(&Day04.Part1.score_game/1)
+      |> Enum.map(&Map.put(&1, :copies, 1))
 
-  # Return a "scored game", a game Map with score in :score key.
-  # def score_game_2(game_map) do
-  #   winnings = MapSet.new(game_map.winnings)
+    game_map = games |> Enum.into(%{}, &{&1.index, &1})
 
-  #   won_draws =
-  #     game_map.your_draw
-  #     |> Enum.map(fn elem ->
-  #       if MapSet.member?(winnings, elem) do
-  #         1
-  #       else
-  #         0
-  #       end
-  #     end)
-  #     |> Enum.sum()
+    results =
+      games
+      |> Enum.reduce(game_map, &apply_game/2)
+  end
 
-  #   %{game_map| score: won_draws}
-  # end
+  # Used in reduction. Apply game to current state and return new state.
+  def apply_game(game, state) do
+    index = game.index
+
+    case game.score do
+      0 ->
+        state
+
+      score ->
+        # Update state
+        copies = Map.get(state, index).copies
+        cards_won = (index + 1)..(index + score)
+
+        Enum.reduce(cards_won, state, fn won_index, cur_state ->
+          Map.get_and_update!(cur_state, won_index, fn next_game ->
+            require IEx; IEx.pry
+            {next_game, %{next_game | copies: (next_game.copies + copies)}}
+            {next_game, %{next_game | copies: 0}}
+          end)
+        end)
+    end
+  end
 end
 
 defmodule Mix.Tasks.Day04 do
