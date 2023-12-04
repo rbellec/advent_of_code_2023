@@ -113,11 +113,11 @@ defmodule DayO4Test do
     @tag timeout: 300_000
     test "apply game 1 to a state", context do
       expected = [
-        %{index: 1, copies: 10, score: 1},
+        %{index: 1, copies: 10, score: 2},
         %{index: 2, copies: 11, score: 1},
         %{index: 3, copies: 11, score: 0},
         %{index: 4, copies: 1, score: 0}
-      ]
+      ] |> Enum.into(%{}, &{&1.index, &1})
 
       game_1 = hd(context.state_list)
       assert(expected == Day04.Part2.apply_game(game_1, context.state))

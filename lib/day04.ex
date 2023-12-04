@@ -103,11 +103,8 @@ defmodule Day04.Part2 do
         cards_won = (index + 1)..(index + score)
 
         Enum.reduce(cards_won, state, fn won_index, cur_state ->
-          Map.get_and_update!(cur_state, won_index, fn next_game ->
-            require IEx; IEx.pry
-            {next_game, %{next_game | copies: (next_game.copies + copies)}}
-            {next_game, %{next_game | copies: 0}}
-          end)
+          Map.get_and_update!(cur_state, won_index, fn next_game -> {next_game, %{next_game| copies: copies + next_game.copies}} end)
+          |> elem(1)
         end)
     end
   end
