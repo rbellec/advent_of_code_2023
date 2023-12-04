@@ -45,6 +45,13 @@ defmodule Day04.Part1 do
     |> Day04.Parser.game()
     |> elem(1)
     |> Enum.map(&score_game/1)
+    |> Enum.map(fn game ->
+      if game.score == 0 do
+        0
+      else
+        2 ** (game.score - 1)
+      end
+    end)
     |> Enum.sum()
   end
 
@@ -63,24 +70,34 @@ defmodule Day04.Part1 do
       end)
       |> Enum.sum()
 
-    if won_draws == 0 do
-      0
-    else
-      2 ** (won_draws - 1)
-    end
+    Map.put(game_map, :score, won_draws)
   end
 end
 
 defmodule Day04.Part2 do
-  @moduledoc """
-  Documentation for `Day01.Part1`.
-  """
-
   # def solve(input) do
-  #   input
-  #   |> Day0.Part1.parse_input()
+  #   games =
+  #     Day04.Parser.game(input)
+  #     |> elem(1)
+  #     |> Enum.map(&score_game_2/1)
+  # end
 
-  #   # ...
+  # Return a "scored game", a game Map with score in :score key.
+  # def score_game_2(game_map) do
+  #   winnings = MapSet.new(game_map.winnings)
+
+  #   won_draws =
+  #     game_map.your_draw
+  #     |> Enum.map(fn elem ->
+  #       if MapSet.member?(winnings, elem) do
+  #         1
+  #       else
+  #         0
+  #       end
+  #     end)
+  #     |> Enum.sum()
+
+  #   %{game_map| score: won_draws}
   # end
 end
 

@@ -80,13 +80,23 @@ defmodule DayO4Test do
     import Day04.Part1
 
     test "number_won_per_games", context do
-      scores = [8, 2, 2, 1, 0, 0]
-      results = Day04.Parser.game(context[:demo_input_aoc]) |> elem(1) |> Enum.map(&score_game/1)
+      scores = [4, 2, 2, 1, 0, 0]
+
+      results =
+        Day04.Parser.game(context[:demo_input_aoc])
+        |> elem(1)
+        |> Enum.map(&score_game/1)
+        |> Enum.map(& &1.score)
+
       assert(scores == results)
     end
 
     test "solve part 1 demo", context do
       assert(13 == Day04.Part1.solve(context[:demo_input_aoc]))
     end
+  end
+
+  describe "Part 2" do
+    # Day04.Parser.game(demo_input_aoc) |> elem(1) |> Enum.map(&Day04.Part1.score_game/1)
   end
 end
