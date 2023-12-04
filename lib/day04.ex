@@ -11,9 +11,10 @@ defmodule Day04.Parser do
 
   spaces = times(string(" "), min: 1)
   eol = choice([string("\r\n"), string("\n")])
-  pipe_sep = string("|") |> ignore(spaces)
-  colon = string(":") |> ignore(spaces)
-  number = integer(min: 1) |> ignore(choice([spaces, eol]))
+
+  pipe_sep = ignore(spaces) |> string("|")
+  colon = string(":")
+  number = ignore(spaces) |> integer(min: 1)
 
   line =
     ignore(string("Card "))

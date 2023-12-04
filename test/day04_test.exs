@@ -7,6 +7,7 @@ defmodule DayO4Test do
 
   setup do
     input_line = "Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53"
+    input_line3 = "Card 3:  1 21 53 59 44 | 69 82 63 72 16 21 14  1"
 
     demo_input_aoc = """
     Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
@@ -25,8 +26,15 @@ defmodule DayO4Test do
 
   describe "Day 04 parsing" do
     test "Parse a line", context do
-      expected = [index: 1, winnings: [41, 48, 83, 86, 17], your_draw: [83, 86, 6, 31, 17, 9, 48]]
+      expected = [index: 1, winnings: [41, 48, 83, 86, 17], your_draw: [83, 86, 6, 31, 17, 9, 48, 53]]
       assert(expected == elem(Day04.Parser.line(context[:input_line]), 1))
+    end
+
+    test "parse line with space before first int", context do
+      test_line = "Card 3:  1 21 53 59 44 | 69 82 63 72 16 21 14  1"
+      expected = [index: 3, winnings: [1, 21, 53, 59, 44], your_draw: [69, 82, 63, 72, 16, 21, 14, 1]]
+
+      assert(expected == elem(Day04.Parser.line(test_line), 1))
     end
 
     test "parse demo data", context do
@@ -46,7 +54,7 @@ defmodule DayO4Test do
           winnings: [1, 21, 53, 59, 44],
           your_draw: [69, 82, 63, 72, 16, 21, 14, 1]
         },
-        %{index: 4, winnings: [1, 21, 53, 59, 44], your_draw: [59, 84, 76, 51, 58, 5, 54, 83]},
+        %{index: 4, winnings: [41, 92, 73, 84, 69], your_draw: [59, 84, 76, 51, 58, 5, 54, 83]},
         %{
           index: 5,
           winnings: [87, 83, 26, 28, 32],
