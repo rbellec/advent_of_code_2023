@@ -76,6 +76,11 @@ end
 
 defmodule Day04.Part2 do
   def solve(input) do
+    calculate_copies(input) |> Enum.sum()
+  end
+
+  # Placed in own method just for unit testing.
+  def calculate_copies(input) do
     games =
       Day04.Parser.game(input)
       |> elem(1)
@@ -84,9 +89,12 @@ defmodule Day04.Part2 do
 
     game_map = games |> Enum.into(%{}, &{&1.index, &1})
 
-    results =
+    final_state =
       games
       |> Enum.reduce(game_map, &apply_game/2)
+
+    # Map seems to keep order.
+    final_state |> Map.values() |> Enum.map(& &1.copies)
   end
 
   # Used in reduction. Apply game to current state and return new state.
@@ -103,7 +111,9 @@ defmodule Day04.Part2 do
         cards_won = (index + 1)..(index + score)
 
         Enum.reduce(cards_won, state, fn won_index, cur_state ->
-          Map.get_and_update!(cur_state, won_index, fn next_game -> {next_game, %{next_game| copies: copies + next_game.copies}} end)
+          Map.get_and_update!(cur_state, won_index, fn next_game ->
+            {next_game, %{next_game | copies: copies + next_game.copies}}
+          end)
           |> elem(1)
         end)
     end

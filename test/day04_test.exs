@@ -112,15 +112,25 @@ defmodule DayO4Test do
     # Day04.Parser.game(demo_input_aoc) |> elem(1) |> Enum.map(&Day04.Part1.score_game/1)
     @tag timeout: 300_000
     test "apply game 1 to a state", context do
-      expected = [
-        %{index: 1, copies: 10, score: 2},
-        %{index: 2, copies: 11, score: 1},
-        %{index: 3, copies: 11, score: 0},
-        %{index: 4, copies: 1, score: 0}
-      ] |> Enum.into(%{}, &{&1.index, &1})
+      expected =
+        [
+          %{index: 1, copies: 10, score: 2},
+          %{index: 2, copies: 11, score: 1},
+          %{index: 3, copies: 11, score: 0},
+          %{index: 4, copies: 1, score: 0}
+        ]
+        |> Enum.into(%{}, &{&1.index, &1})
 
       game_1 = hd(context.state_list)
       assert(expected == Day04.Part2.apply_game(game_1, context.state))
+    end
+
+    test "apply_game to all games in demo", context do
+      expected_copies = [1, 2, 4, 8, 14, 1]
+      result = Day04.Part2.calculate_copies(context.demo_input_aoc)
+
+      # require IEx; IEx.pry
+      assert(expected_copies == result)
     end
   end
 end
