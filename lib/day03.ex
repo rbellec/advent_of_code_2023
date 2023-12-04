@@ -3,47 +3,9 @@ defmodule Day03.Match do
   defstruct [:type, :string, :coord, :int_value, :length, positions: []]
 end
 
-defmodule Day03.Part1 do
+defmodule Day03.Parser do
   import Pathex
   import Pathex.Lenses
-
-  def solve(input) do
-    {token_list, map_2d} = parse_input(input)
-
-    get_symbol_positions(token_list)
-    |> Enum.flat_map(&get_numbers_around_position(map_2d, &1))
-    |> Enum.sum()
-  end
-
-  # All position around a given position
-  def around({x, y}) do
-    [
-      {x - 1, y - 1},
-      {x, y - 1},
-      {x + 1, y - 1},
-      {x - 1, y},
-      {x + 1, y},
-      {x - 1, y + 1},
-      {x, y + 1},
-      {x + 1, y + 1}
-    ]
-  end
-
-  def get_numbers_around_position(map_2d, position) do
-    around(position)
-    |> Enum.map(&Map.get(map_2d, &1))
-    |> view(star() ~> matching(%{type: :number}))
-    |> case do
-      {:ok, numbers} -> Enum.uniq_by(numbers, & &1.coord) |> Enum.map(& &1.int_value)
-      :error -> []
-    end
-  end
-
-  def get_symbol_positions(token_list) do
-    token_list
-    |> view!(star() ~> matching(%{type: :symbol}) ~> path(:positions))
-    |> List.flatten()
-  end
 
   def parse_input(input) do
     tokens =
@@ -102,10 +64,56 @@ defmodule Day03.Part1 do
   end
 end
 
+defmodule Day03.Part1 do
+  import Pathex
+  import Pathex.Lenses
+
+  import Day03.Parser
+
+  def solve(input) do
+    {token_list, map_2d} = parse_input(input)
+
+    get_symbol_positions(token_list)
+    |> Enum.flat_map(&get_numbers_around_position(map_2d, &1))
+    |> Enum.sum()
+  end
+
+  # All position around a given position
+  def around({x, y}) do
+    [
+      {x - 1, y - 1},
+      {x, y - 1},
+      {x + 1, y - 1},
+      {x - 1, y},
+      {x + 1, y},
+      {x - 1, y + 1},
+      {x, y + 1},
+      {x + 1, y + 1}
+    ]
+  end
+
+  def get_numbers_around_position(map_2d, position) do
+    around(position)
+    |> Enum.map(&Map.get(map_2d, &1))
+    |> view(star() ~> matching(%{type: :number}))
+    |> case do
+      {:ok, numbers} -> Enum.uniq_by(numbers, & &1.coord) |> Enum.map(& &1.int_value)
+      :error -> []
+    end
+  end
+
+  def get_symbol_positions(token_list) do
+    token_list
+    |> view!(star() ~> matching(%{type: :symbol}) ~> path(:positions))
+    |> List.flatten()
+  end
+end
+
 defmodule Day03.Part2 do
   import Pathex
   import Pathex.Lenses
   import Day03.Part1
+  import Day03.Parser
 
   def solve(input) do
     {token_list, map_2d} = parse_input(input)

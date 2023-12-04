@@ -1,5 +1,6 @@
 defmodule DayO3Test do
   import Day03.Part1
+  import Day03.Parser
   use ExUnit.Case
 
   setup do
@@ -73,25 +74,25 @@ defmodule DayO3Test do
         }
       ]
 
-      assert(expected == Day03.Part1.parse_line(context[:input_line], 0))
+      assert(expected == parse_line(context[:input_line], 0))
     end
   end
 
   describe "Day 03 part 1" do
     test "Find symbol positions", context do
-      {line_tokens, _} = Day03.Part1.parse_input(context[:input_line])
+      {line_tokens, _} = parse_input(context[:input_line])
       assert([{5, 0}] = Day03.Part1.get_symbol_positions(line_tokens))
 
       assert(
         [{3, 1}, {6, 3}, {3, 4}, {5, 5}, {3, 8}, {5, 8}] =
-          Day03.Part1.parse_input(context[:demo_input_aoc])
+          parse_input(context[:demo_input_aoc])
           |> elem(0)
           |> Day03.Part1.get_symbol_positions()
       )
 
       assert(
         [{9, 0}, {0, 1}, {7, 2}, {2, 4}, {11, 6}, {6, 7}, {1, 10}, {11, 10}, {8, 11}] =
-          Day03.Part1.parse_input(context[:reddit_alternate_grid])
+          parse_input(context[:reddit_alternate_grid])
           |> elem(0)
           |> Day03.Part1.get_symbol_positions()
       )
