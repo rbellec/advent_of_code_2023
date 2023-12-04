@@ -45,6 +45,7 @@ defmodule Day04.Part1 do
     |> Day04.Parser.game()
     |> elem(1)
     |> Enum.map(&score_game/1)
+    |> Enum.sum()
   end
 
   def score_game(game_map) do

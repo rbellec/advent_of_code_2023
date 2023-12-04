@@ -89,5 +89,9 @@ defmodule DayO4Test do
       results = Day04.Parser.game(context[:demo_input_aoc]) |> elem(1) |> Enum.map(&score_game/1)
       assert(scores == results)
     end
+
+    test "solve part 1 demo", context do
+      assert( 13 == Day04.Part1.solve(context[:demo_input_aoc]) )
+    end
   end
 end
