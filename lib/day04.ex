@@ -51,15 +51,22 @@ defmodule Day04.Part1 do
     # elements may be present multiple times ?
     winnings = MapSet.new(game_map.winnings)
 
-    game_map.your_draw
-    |> Enum.map(fn elem ->
-      if MapSet.member?(winnings, elem) do
-        1
-      else
-        0
-      end
-    end)
-    |> Enum.sum()
+    won_draws =
+      game_map.your_draw
+      |> Enum.map(fn elem ->
+        if MapSet.member?(winnings, elem) do
+          1
+        else
+          0
+        end
+      end)
+      |> Enum.sum()
+
+    if won_draws == 0 do
+      0
+    else
+      2 ** (won_draws - 1)
+    end
   end
 end
 
