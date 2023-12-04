@@ -131,7 +131,7 @@ defmodule Mix.Tasks.Day04 do
     IO.puts("--- Part 1 ---")
     IO.puts(Day04.Part1.solve(input))
     IO.puts("")
-    # IO.puts("--- Part 2 ---")
-    # IO.puts(Day04.Part2.solve(input))
+    IO.puts("--- Part 2 ---")
+    IO.puts(Day04.Part2.solve(input))
   end
 end
