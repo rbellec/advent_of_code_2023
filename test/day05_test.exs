@@ -194,6 +194,6 @@ defmodule DayO5Test do
   end
 
   test "solve", context do
-    result = Day05.Part1.solve(context.demo_input_aoc)
+    assert(Day05.Part1.solve(context.demo_input_aoc) == 35)
   end
 end
