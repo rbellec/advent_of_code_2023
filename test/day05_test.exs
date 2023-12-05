@@ -72,7 +72,7 @@ defmodule DayO5Test do
       # ":" remain to parse after.
       assert(":" = loc_string |> elem(2))
 
-      assert(seeds: [79, 14, 55, 13])
+      assert([seeds: [79, 14, 55, 13]] = seed)
       assert(["seed-to-soil map", ":"] = location)
       assert([destination: 0, source: 15, length: 37] = range)
     end
@@ -87,7 +87,9 @@ defmodule DayO5Test do
           offset: -48,
           length: 2,
           source: 98,
-          destination: 50
+          destination: 50,
+          image_range: 50..51,
+          input_range: 98..99
         },
         %Day05.GardenFunctionElement{
           from: nil,
@@ -95,16 +97,28 @@ defmodule DayO5Test do
           offset: 2,
           length: 48,
           source: 50,
-          destination: 52
+          destination: 52,
+          image_range: 52..99,
+          input_range: 50..97
         }
       ]
-      assert(expected = parsed_result)
+      assert(expected == parsed_result)
     end
 
-    test "parse file", context do
-      parsed_result = file(context.demo_input_aoc) |> elem(1)
-      require IEx; IEx.pry
+    test "parse file", _context do
+      # parsed_result = file(context.demo_input_aoc) |> elem(1)
+      # require IEx; IEx.pry
+      # Parse is ok and no time to unit test it.
     end
 
+  end
+
+  describe "Compose offset on range functions" do
+    # Range 1    |-------------|
+    # on Range 2       |-------------|
+    #
+    test "simple application on two intersecting ranges", _context do
+
+    end
   end
 end

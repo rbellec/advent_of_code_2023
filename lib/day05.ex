@@ -1,7 +1,7 @@
 # Define a function from a place to the next in the garden.
 defmodule Day05.GardenFunctionElement do
 
-  defstruct [:from, :to, :offset, :length, :source, :destination]
+  defstruct [:from, :to, :offset, :length, :source, :destination, :input_range, :image_range]
 
   def convert_range(raw_range) do
     length = raw_range |> Keyword.get(:length)
@@ -13,7 +13,9 @@ defmodule Day05.GardenFunctionElement do
       offset: offset,
       length: length,
       source: source,
-      destination: destination
+      destination: destination,
+      input_range: Range.new(source, source + length - 1),
+      image_range: Range.new(destination, destination + length - 1)
     }
   end
 end
@@ -49,7 +51,7 @@ defmodule Day05.Parser do
 
   file =
     seeds
-    |> concat(times(sep |> concat(garden_function) |> wrap, min: 1))
+    |> concat(times(sep |> concat(garden_function) |> wrap, min: 1) |> tag(:functions) )
     # |> eos
 
   defparsec(:seeds, seeds)
@@ -61,6 +63,8 @@ defmodule Day05.Parser do
 end
 
 defmodule Day05.Part1 do
+  # My first idea was to compose each non deterministic "function" and get a list of final functions representing the seed-to-location function
+  # But I did not find any working range arithmetic in elixir and I do not have time to write it.
   # def solve(input) do
   #   input
   #   |> Day05.Parser.()
