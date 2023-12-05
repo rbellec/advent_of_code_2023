@@ -48,12 +48,36 @@ defmodule DayO5Test do
     56 93 4
     """
 
+    demo_functions = [
+      %Day05.GardenFunctionElement{
+        from: nil,
+        to: nil,
+        offset: -48,
+        length: 2,
+        source: 98,
+        destination: 50,
+        image_range: 50..51,
+        input_range: 98..99
+      },
+      %Day05.GardenFunctionElement{
+        from: nil,
+        to: nil,
+        offset: 2,
+        length: 48,
+        source: 50,
+        destination: 52,
+        image_range: 52..99,
+        input_range: 50..97
+      }
+    ]
+
     %{
       seed_line: seed_line,
       location_line: location_line,
       range_line: range_line,
       garden_function_def: garden_function_def,
-      demo_input_aoc: demo_input_aoc
+      demo_input_aoc: demo_input_aoc,
+      demo_functions: demo_functions
     }
   end
 
@@ -80,29 +104,7 @@ defmodule DayO5Test do
     test "parse a between location function", context do
       parsed_result = garden_function(context.garden_function_def) |> elem(1)
 
-      expected = [
-        %Day05.GardenFunctionElement{
-          from: nil,
-          to: nil,
-          offset: -48,
-          length: 2,
-          source: 98,
-          destination: 50,
-          image_range: 50..51,
-          input_range: 98..99
-        },
-        %Day05.GardenFunctionElement{
-          from: nil,
-          to: nil,
-          offset: 2,
-          length: 48,
-          source: 50,
-          destination: 52,
-          image_range: 52..99,
-          input_range: 50..97
-        }
-      ]
-      assert(expected == parsed_result)
+      assert(context.demo_functions == parsed_result)
     end
 
     test "parse file", _context do
@@ -113,12 +115,38 @@ defmodule DayO5Test do
 
   end
 
-  describe "Compose offset on range functions" do
-    # Range 1    |-------------|
-    # on Range 2       |-------------|
-    #
-    test "simple application on two intersecting ranges", _context do
+  # describe "Compose offset on range functions" do
+  #   # Range 1    |-------------|
+  #   # on Range 2       |-------------|
+  #   #
+  #   test "simple application on two intersecting ranges", _context do
 
+  #   end
+  # end
+
+  describe "applying garden functions" do
+    import Day05.GardenFunctionElement
+    test "apply one", context do
+      # source: 98, destination: 50, offset: -48, length: 2
+      # require IEx; IEx.pry
+      assert( apply_one(Enum.at(context.demo_functions, 0),  97) == nil )
+      assert( apply_one(Enum.at(context.demo_functions, 0),  98) == 50 )
+      assert( apply_one(Enum.at(context.demo_functions, 0),  99) == 51 )
+      assert( apply_one(Enum.at(context.demo_functions, 0), 100) == nil )
+
+      assert( apply_one(Enum.at(context.demo_functions, 1),  49) == nil )
+      assert( apply_one(Enum.at(context.demo_functions, 1),  50) == 52 )
+    end
+
+    test "apply_garden_fun", context do
+      # require IEx; IEx.pry
+      assert( apply_garden_fun(context.demo_functions, 98) == [50] )
+      assert( apply_garden_fun(context.demo_functions, 50) == [52] )
+      assert( apply_garden_fun(context.demo_functions, 10) == [10] )
     end
   end
+
+  # test "solve", context do
+  #   Day05.Part1.solve(context.demo_input_aoc)
+  # end
 end

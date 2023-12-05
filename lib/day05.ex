@@ -18,6 +18,25 @@ defmodule Day05.GardenFunctionElement do
       image_range: Range.new(destination, destination + length - 1)
     }
   end
+
+  # Take an integer and apply the function.
+  # return nil if its
+  def apply_one(function_elem, location) do
+    case location in function_elem.input_range do
+      true -> location + function_elem.offset
+      false -> nil
+    end
+  end
+
+  def apply_garden_fun(list_of_elements, location) do
+    list_of_elements
+    |> Enum.map(&apply_one(&1, location))
+    |> Enum.reject(&is_nil/1)
+    |> case do
+      [] -> [location] # return current location if no movement was available
+      new_locations -> new_locations
+    end
+  end
 end
 
 defmodule Day05.Parser do
@@ -63,12 +82,22 @@ defmodule Day05.Parser do
 end
 
 defmodule Day05.Part1 do
+  import Day05.GardenFunctionElement
   # My first idea was to compose each non deterministic "function" and get a list of final functions representing the seed-to-location function
   # But I did not find any working range arithmetic in elixir and I do not have time to write it.
-  # def solve(input) do
-  #   input
-  #   |> Day05.Parser.()
-  # end
+  def solve(input) do
+    data = Day05.Parser.file(input) |> elem(1)
+
+    seeds = Keyword.get(data, :seeds)
+    functions = Keyword.get(data, :functions)
+    
+
+    result = Enum.reduce(functions, seeds, fn funcs, locations ->
+      Enum.flat_map(locations, &apply_garden_fun(funcs, &1))
+    end)
+
+    require IEx; IEx.pry
+  end
 end
 
 defmodule Mix.Tasks.Day05 do
