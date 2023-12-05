@@ -1,15 +1,25 @@
 # Define a function from a place to the next in the garden.
-defmodule Day05.GardenFunction do
+defmodule Day05.GardenFunctionElement do
+
   defstruct [:from, :to, :offset, :length, :source, :destination]
+
+  def convert_range(raw_range) do
+    length = raw_range |> Keyword.get(:length)
+    source = raw_range |> Keyword.get(:source)
+    destination = raw_range |> Keyword.get(:destination)
+    offset = destination - source
+
+    %Day05.GardenFunctionElement{
+      offset: offset,
+      length: length,
+      source: source,
+      destination: destination
+    }
+  end
 end
 
 defmodule Day05.Parser do
   import NimbleParsec
-
-  def to_garden_function_element(list) do
-    # TODO
-    Enum.map(& &1)
-  end
 
   spaces = times(string(" "), min: 1)
   eol = choice([string("\r\n"), string("\n")])
@@ -21,44 +31,36 @@ defmodule Day05.Parser do
   seeds = ignore(string("seeds:")) |> concat(times(number, min: 1) |> tag(:seeds))
 
   # Garden places not needed in part 1 at least
-  location_names = spaces |> concat(ascii_string([?a..?z, ?-, ?\s], min: 1)) |> concat(colon)
+  misc_string = ascii_string([?a..?z, ?A..?Z, ?\-, ?\s], min: 1)
+  location_names = misc_string |> concat(colon)
 
   range_definition =
     integer(min: 1)
     |> unwrap_and_tag(:destination)
-    |> (concat(number) |> unwrap_and_tag(:source))
-    |> (concat(number) |> unwrap_and_tag(:length))
+    |> concat(number |> unwrap_and_tag(:source))
+    |> concat(number |> unwrap_and_tag(:length))
 
   garden_function =
     ignore(location_names)
-    |> concat(times(sep |> range_definition |> wrap, min: 1) |> map(:to_garden_function_element))
+    |> concat(
+      times(sep |> concat(range_definition) |> wrap, min: 1)
+      |> map({Day05.GardenFunctionElement, :convert_range, []})
+    )
 
   file =
     seeds
-    |> concat(times(sep |> garden_function |> wrap, min: 1))
-    |> eos
-
-  # line =
-  #   ignore(string("Card"))
-  #   |> (concat(number) |> unwrap_and_tag(:index))
-  #   |> ignore(colon)
-  #   |> concat(times(number, min: 1) |> tag(:winnings))
-  #   |> ignore(pipe_sep)
-  #   |> concat(times(number, min: 1) |> tag(:your_draw))
-  #   |> ignore(optional(eol))
-
-  # Ok
+    |> concat(times(sep |> concat(garden_function) |> wrap, min: 1))
+    # |> eos
 
   defparsec(:seeds, seeds)
-  defparsec(:location_names, garden_distance)
+  defparsec(:misc_string, misc_string)
+  defparsec(:location_names, location_names)
   defparsec(:range_definition, range_definition)
   defparsec(:garden_function, garden_function)
   defparsec(:file, file)
 end
 
-defmodule Day04.Part1 do
-
-
+defmodule Day05.Part1 do
   # def solve(input) do
   #   input
   #   |> Day05.Parser.()
@@ -70,8 +72,8 @@ defmodule Mix.Tasks.Day05 do
 
   @spec run(any()) :: :ok
   def run(_) do
-    input_filename = "inputs/day05.txt"
-    {:ok, input} = File.read(input_filename)
+    # input_filename = "inputs/day05.txt"
+    # {:ok, input} = File.read(input_filename)
 
     # IO.puts("--- Part 1 ---")
     # IO.puts(Day05.Part1.solve(input))
