@@ -71,13 +71,47 @@ defmodule DayO5Test do
       }
     ]
 
+    demo_functions_2 = [
+      %Day05.GardenFunctionElement{
+        from: nil,
+        to: nil,
+        offset: -15,
+        length: 37,
+        source: 15,
+        destination: 0,
+        input_range: 15..51,
+        image_range: 0..36
+      },
+      %Day05.GardenFunctionElement{
+        from: nil,
+        to: nil,
+        offset: -15,
+        length: 2,
+        source: 52,
+        destination: 37,
+        input_range: 52..53,
+        image_range: 37..38
+      },
+      %Day05.GardenFunctionElement{
+        from: nil,
+        to: nil,
+        offset: 39,
+        length: 15,
+        source: 0,
+        destination: 39,
+        input_range: 0..14,
+        image_range: 39..53
+      }
+    ]
+
     %{
       seed_line: seed_line,
       location_line: location_line,
       range_line: range_line,
       garden_function_def: garden_function_def,
       demo_input_aoc: demo_input_aoc,
-      demo_functions: demo_functions
+      demo_functions: demo_functions,
+      demo_functions_2: demo_functions_2
     }
   end
 
@@ -143,10 +177,23 @@ defmodule DayO5Test do
       assert( apply_garden_fun(context.demo_functions, 98) == [50] )
       assert( apply_garden_fun(context.demo_functions, 50) == [52] )
       assert( apply_garden_fun(context.demo_functions, 10) == [10] )
+
+      assert( apply_garden_fun(context.demo_functions_2, 81) == [81] )
+    end
+
+    test "apply_garden_fun to a list of seed", context do
+      # require IEx; IEx.pry
+      test = fn data, expected ->
+        apply_garden_fun_to_locations(context.demo_functions, data) == expected
+      end
+      assert(test.([1, 2, 3], [1, 2, 3]))
+      assert(test.([1, 98], [1, 50]))
+      assert(test.([1, 98, 50], [1, 50, 52]))
+      assert(test.([79, 14, 55, 13], [81, 14, 57, 13]))
     end
   end
 
-  # test "solve", context do
-  #   Day05.Part1.solve(context.demo_input_aoc)
-  # end
+  test "solve", context do
+    result = Day05.Part1.solve(context.demo_input_aoc)
+  end
 end

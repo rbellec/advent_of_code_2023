@@ -31,11 +31,17 @@ defmodule Day05.GardenFunctionElement do
   def apply_garden_fun(list_of_elements, location) do
     list_of_elements
     |> Enum.map(&apply_one(&1, location))
+    # return current location if no movement was available
     |> Enum.reject(&is_nil/1)
     |> case do
-      [] -> [location] # return current location if no movement was available
+      [] -> [ location ]
       new_locations -> new_locations
     end
+  end
+
+  def apply_garden_fun_to_locations(list_of_elements, locations) do
+    # require IEx; IEx.pry
+    Enum.flat_map(locations, &apply_garden_fun(list_of_elements, &1))
   end
 end
 
@@ -82,7 +88,6 @@ defmodule Day05.Parser do
 end
 
 defmodule Day05.Part1 do
-  import Day05.GardenFunctionElement
   # My first idea was to compose each non deterministic "function" and get a list of final functions representing the seed-to-location function
   # But I did not find any working range arithmetic in elixir and I do not have time to write it.
   def solve(input) do
@@ -90,13 +95,13 @@ defmodule Day05.Part1 do
 
     seeds = Keyword.get(data, :seeds)
     functions = Keyword.get(data, :functions)
-    
 
-    result = Enum.reduce(functions, seeds, fn funcs, locations ->
-      Enum.flat_map(locations, &apply_garden_fun(funcs, &1))
-    end)
+    final_locations(functions, seeds)
+    |> Enum.min()
+  end
 
-    require IEx; IEx.pry
+  def final_locations(functions, seeds) do
+    Enum.reduce(functions, seeds, &Day05.GardenFunctionElement.apply_garden_fun_to_locations/2)
   end
 end
 
@@ -105,12 +110,12 @@ defmodule Mix.Tasks.Day05 do
 
   @spec run(any()) :: :ok
   def run(_) do
-    # input_filename = "inputs/day05.txt"
-    # {:ok, input} = File.read(input_filename)
+    input_filename = "inputs/day05.txt"
+    {:ok, input} = File.read(input_filename)
 
-    # IO.puts("--- Part 1 ---")
-    # IO.puts(Day05.Part1.solve(input))
-    # IO.puts("")
+    IO.puts("--- Part 1 ---")
+    IO.puts(Day05.Part1.solve(input))
+    IO.puts("")
     # IO.puts("--- Part 2 ---")
     # IO.puts(Day05.Part2.solve(input))
   end
