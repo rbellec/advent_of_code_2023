@@ -1,12 +1,10 @@
 # Define a function from a place to the next in the garden.
+# This name is a proof I should be doing AoC in the morning and not at night !
 defmodule Day05.GardenFunctionElement do
 
   defstruct [:from, :to, :offset, :length, :source, :destination, :input_range, :image_range]
 
-  def convert_range(raw_range) do
-    length = raw_range |> Keyword.get(:length)
-    source = raw_range |> Keyword.get(:source)
-    destination = raw_range |> Keyword.get(:destination)
+  def create_fun_elem(length, source, destination) do
     offset = destination - source
 
     %Day05.GardenFunctionElement{
@@ -17,6 +15,14 @@ defmodule Day05.GardenFunctionElement do
       input_range: Range.new(source, source + length - 1),
       image_range: Range.new(destination, destination + length - 1)
     }
+  end
+
+  def convert_range(raw_range) do
+    length = raw_range |> Keyword.get(:length)
+    source = raw_range |> Keyword.get(:source)
+    destination = raw_range |> Keyword.get(:destination)
+
+    create_fun_elem(length, source, destination)
   end
 
   # Take an integer and apply the function.
@@ -43,6 +49,21 @@ defmodule Day05.GardenFunctionElement do
     # require IEx; IEx.pry
     Enum.flat_map(locations, &apply_garden_fun(list_of_elements, &1))
   end
+
+  # Return a list of GardenFunctionElement. Basically theses are Range operations keeping additional infos like offset.
+  # Not, this is more a `flip (.)`, flipped composition. Feel like a range applicative, but let's do the code.
+  # def compose(fun1, fun2) do
+  #   dest_r = fun2.input_range
+  #   src_r = fun1.image_range
+
+  #   cond
+  #   Range.disjoint?(src_r, dest_r) -> []
+  #   # second range included in first
+  #   src_r.first <= dest_r.first &&  src_r.last >= dest_r.last ->
+  #     image_range: Range.new(destination, destination + length - 1)
+  #   fun1.
+  # end
+
 end
 
 defmodule Day05.Parser do
