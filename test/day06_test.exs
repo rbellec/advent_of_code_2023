@@ -1,4 +1,4 @@
-defmodule DayO5Test do
+defmodule DayO6Test do
   use ExUnit.Case
 
   setup do
