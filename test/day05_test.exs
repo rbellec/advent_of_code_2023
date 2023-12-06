@@ -201,6 +201,4 @@ defmodule DayO5Test do
   test "solve part 2", context do
     assert(Day05.Part2.solve(context.demo_input_aoc) == 46)
   end
-
-  "79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 55 56 57 58 59 60 61 62 63 64 65 66 67 68"
 end
