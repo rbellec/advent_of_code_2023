@@ -146,7 +146,6 @@ defmodule DayO5Test do
       # require IEx; IEx.pry
       # Parse is ok and no time to unit test it.
     end
-
   end
 
   # describe "Compose offset on range functions" do
@@ -160,25 +159,26 @@ defmodule DayO5Test do
 
   describe "applying garden functions" do
     import Day05.GardenFunctionElement
+
     test "apply one", context do
       # source: 98, destination: 50, offset: -48, length: 2
       # require IEx; IEx.pry
-      assert( apply_one(Enum.at(context.demo_functions, 0),  97) == nil )
-      assert( apply_one(Enum.at(context.demo_functions, 0),  98) == 50 )
-      assert( apply_one(Enum.at(context.demo_functions, 0),  99) == 51 )
-      assert( apply_one(Enum.at(context.demo_functions, 0), 100) == nil )
+      assert(apply_one(Enum.at(context.demo_functions, 0), 97) == nil)
+      assert(apply_one(Enum.at(context.demo_functions, 0), 98) == 50)
+      assert(apply_one(Enum.at(context.demo_functions, 0), 99) == 51)
+      assert(apply_one(Enum.at(context.demo_functions, 0), 100) == nil)
 
-      assert( apply_one(Enum.at(context.demo_functions, 1),  49) == nil )
-      assert( apply_one(Enum.at(context.demo_functions, 1),  50) == 52 )
+      assert(apply_one(Enum.at(context.demo_functions, 1), 49) == nil)
+      assert(apply_one(Enum.at(context.demo_functions, 1), 50) == 52)
     end
 
     test "apply_garden_fun", context do
       # require IEx; IEx.pry
-      assert( apply_garden_fun(context.demo_functions, 98) == [50] )
-      assert( apply_garden_fun(context.demo_functions, 50) == [52] )
-      assert( apply_garden_fun(context.demo_functions, 10) == [10] )
+      assert(apply_garden_fun(context.demo_functions, 98) == [50])
+      assert(apply_garden_fun(context.demo_functions, 50) == [52])
+      assert(apply_garden_fun(context.demo_functions, 10) == [10])
 
-      assert( apply_garden_fun(context.demo_functions_2, 81) == [81] )
+      assert(apply_garden_fun(context.demo_functions_2, 81) == [81])
     end
 
     test "apply_garden_fun to a list of seed", context do
@@ -186,6 +186,7 @@ defmodule DayO5Test do
       test = fn data, expected ->
         apply_garden_fun_to_locations(context.demo_functions, data) == expected
       end
+
       assert(test.([1, 2, 3], [1, 2, 3]))
       assert(test.([1, 98], [1, 50]))
       assert(test.([1, 98, 50], [1, 50, 52]))
@@ -196,4 +197,10 @@ defmodule DayO5Test do
   test "solve", context do
     assert(Day05.Part1.solve(context.demo_input_aoc) == 35)
   end
+
+  test "solve part 2", context do
+    assert(Day05.Part2.solve(context.demo_input_aoc) == 46)
+  end
+
+  "79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 55 56 57 58 59 60 61 62 63 64 65 66 67 68"
 end
