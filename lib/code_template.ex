@@ -1,40 +1,26 @@
-defmodule Day0.Parser do
-end
-
-defmodule Day0.Part1 do
-  # Try to use Pathex every time ?
-  # import Pathex
-  # import Pathex.Lenses
-  @moduledoc """
-  Documentation for `Day01.Part1`.
-  """
-
-  def solve(input) do
-    input
-    |> parse_input()
-
-    # ...
+defmodule Day0 do
+  defmodule Parser do
+    def parse(input) do
+      input
+    end
   end
 
-  def parse_input(input) do
-    input
-    |> String.split("\n\n")
+  defmodule Part1 do
+    def solve(input) do
+      Parser.parse(input)
 
-    # ...
+      # ...
+    end
   end
-end
 
-defmodule Day0.Part2 do
-  @moduledoc """
-  Documentation for `Day01.Part1`.
-  """
+  defmodule Part2 do
+    # def solve(input) do
+    #   input
+    #   |> Day0.Part1.parse_input()
 
-  # def solve(input) do
-  #   input
-  #   |> Day0.Part1.parse_input()
-
-  #   # ...
-  # end
+    #   # ...
+    # end
+  end
 end
 
 defmodule Mix.Tasks.Day0 do
