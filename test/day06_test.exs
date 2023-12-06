@@ -26,11 +26,14 @@ defmodule DayO5Test do
   describe "Part 1" do
     import Day06.Part1
 
-    test "solve one race", context do
+    test "solve one race", _context do
       assert(4 == solve_race({7, 9}))
       assert(8 == solve_race({15, 40}))
       assert(9 == solve_race({30, 200}))
-      # assert( 1 == solve_race({time, distance}))
+    end
+
+    test "Solve part 1", context do
+      assert(288 == solve(context.demo_input_aoc))
     end
   end
 end
