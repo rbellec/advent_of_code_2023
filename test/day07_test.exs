@@ -16,38 +16,43 @@ defmodule DayO7Test do
     expected_parse_result = [
       %Day07.Hand{
         text_hand: "32T3K",
-        bet: 765,
         cards: [13, 10, 3, 3, 2],
+        bet: 765,
         hand_value: 2,
-        hand_name: :pairs
+        hand_name: :pair,
+        hand_composition: [3, 13, 10, 2]
       },
       %Day07.Hand{
         text_hand: "T55J5",
-        bet: 684,
         cards: [11, 10, 5, 5, 5],
+        bet: 684,
         hand_value: 4,
-        hand_name: :brelan
+        hand_name: :brelan,
+        hand_composition: [5, 11, 10]
       },
       %Day07.Hand{
         text_hand: "KK677",
-        bet: 28,
         cards: [13, 13, 7, 7, 6],
+        bet: 28,
         hand_value: 3,
-        hand_name: :two_pairs
+        hand_name: :two_pairs,
+        hand_composition: [13, 7, 6]
       },
       %Day07.Hand{
         text_hand: "KTJJT",
+        cards: [13, 11, 11, 10, 10],
         bet: 220,
-        cards: ~c"\r\v\v\n\n",
         hand_value: 3,
-        hand_name: :two_pairs
+        hand_name: :two_pairs,
+        hand_composition: [11, 10, 13]
       },
       %Day07.Hand{
         text_hand: "QQQJA",
-        bet: 483,
         cards: [14, 12, 12, 12, 11],
+        bet: 483,
         hand_value: 4,
-        hand_name: :brelan
+        hand_name: :brelan,
+        hand_composition: [12, 14, 11]
       }
     ]
 
@@ -63,6 +68,7 @@ defmodule DayO7Test do
     import Day07.Parser
 
     test "parse", context do
+      res = parse(context.demo_input_aoc)
       # require IEx; IEx.pry()
       assert(parse(context.demo_input_aoc) == context.expected_parse_result)
     end

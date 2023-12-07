@@ -9,18 +9,19 @@ defmodule Day07 do
   end
 
   defmodule Hand do
-    defstruct [:text_hand, :cards, :bet, :hand_value, :hand_name]
+    defstruct [:text_hand, :cards, :bet, :hand_value, :hand_name, :hand_composition]
 
     def parse_hand([text_hand, bet]) do
       cards = String.graphemes(text_hand) |> Enum.map(&card_value/1) |> Enum.sort(:desc)
-      {hand_value, hand_name} = value_hand(cards)
+      {hand_value, hand_name, hand_composition} = value_hand(cards)
 
       %Hand{
         text_hand: text_hand,
         cards: cards,
         bet: String.to_integer(bet),
         hand_value: hand_value,
-        hand_name: hand_name
+        hand_name: hand_name,
+        hand_composition: hand_composition
       }
     end
 
@@ -35,8 +36,10 @@ defmodule Day07 do
       end
     end
 
+    # Return {hand score, hand name, hand_composition}
     def value_hand(cards) do
-      hand_counts =
+      # Create a map with {card_value => number_of_cards}
+      quantity_by_card_values =
         Enum.reduce(cards, %{}, fn value, tally_map ->
           Map.get_and_update(tally_map, value, fn
             nil -> {nil, 1}
@@ -45,24 +48,50 @@ defmodule Day07 do
           |> elem(1)
         end)
 
-      # Kepts name because why not ?
+      # Create reciprocal map: {number_of_cards => card_value}
+      values_by_qtt =
+        quantity_by_card_values
+        |> Map.to_list()
+        |> Enum.map(fn {a, b} -> {b, a} end)
+        |> Map.new()
 
-      Map.values(hand_counts)
-      |> Enum.sort()
-      |> case do
-        [5] -> {7, :five_of_a_kind}
-        [1, 4] -> {6, :four_of_a_kind}
-        [2, 3] -> {5, :full}
-        [1, 1, 3] -> {4, :brelan}
-        [1, 2, 2] -> {3, :two_pairs}
-        [1, 1, 1, 2] -> {2, :pairs}
-        [1, 1, 1, 1, 1] -> {1, :high_card}
-      end
+      hand_name =
+        Map.values(quantity_by_card_values)
+        |> Enum.sort()
+        |> case do
+          [5] -> {7, :five_of_a_kind}
+          [1, 4] -> {6, :four_of_a_kind}
+          [2, 3] -> {5, :full}
+          [1, 1, 3] -> {4, :brelan}
+          [1, 2, 2] -> {3, :two_pairs}
+          [1, 1, 1, 2] -> {2, :pair}
+          [1, 1, 1, 1, 1] -> {1, :high_card}
+        end
+
+      # Cards in order of relevance in the end.
+      hand_composition =
+        Enum.sort(cards, fn a, b ->
+          num_a = Map.get(quantity_by_card_values, a)
+          num_b = Map.get(quantity_by_card_values, b)
+
+          if num_a == num_b do
+            a <= b
+          else
+            num_a < num_b
+          end
+        end)
+        |> Enum.dedup()
+        |> Enum.reverse()
+
+      hand_name
+      # |> Tuple.append(values_by_qtt)
+      |> Tuple.append(hand_composition)
     end
 
+    # True if hands a < b, false otherwise.
     def compare_hands(a, b) do
       if a.hand_value == b.hand_value do
-        Enum.zip(a.cards, b.cards)
+        Enum.zip(a.hand_composition, b.hand_composition)
         |> Enum.reduce_while(true, fn {a, b}, _acc ->
           cond do
             a == b -> {:cont, true}
@@ -80,12 +109,11 @@ defmodule Day07 do
     import Enum
 
     def solve(input) do
-
-        Parser.parse(input)
-        |> sort(&Hand.compare_hands/2)
-        |> map(& &1.bet)
-        |> with_index(&(&1 * (&2 + 1)))
-        |> sum()
+      Parser.parse(input)
+      |> sort(&Hand.compare_hands/2)
+      |> map(& &1.bet)
+      |> with_index(&(&1 * (&2 + 1)))
+      |> sum()
     end
   end
 
