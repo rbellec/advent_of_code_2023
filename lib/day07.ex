@@ -48,13 +48,6 @@ defmodule Day07 do
           |> elem(1)
         end)
 
-      # Create reciprocal map: {number_of_cards => card_value}
-      values_by_qtt =
-        quantity_by_card_values
-        |> Map.to_list()
-        |> Enum.map(fn {a, b} -> {b, a} end)
-        |> Map.new()
-
       hand_name =
         Map.values(quantity_by_card_values)
         |> Enum.sort()
@@ -95,8 +88,8 @@ defmodule Day07 do
         |> Enum.reduce_while(true, fn {a, b}, _acc ->
           cond do
             a == b -> {:cont, true}
-            a < b -> {:halt, true}
-            a > b -> {:halt, false}
+            a > b -> {:halt, true}
+            a < b -> {:halt, false}
           end
         end)
       else
@@ -107,6 +100,17 @@ defmodule Day07 do
 
   defmodule Part1 do
     import Enum
+
+    def print_hand(hand) do
+
+      IO.puts( "#{hand.hand_name}: #{hand.text_hand} \t[#{join(hand.hand_composition, ", ")}], \t#{join(hand.cards, "-")}")
+    end
+
+    def print_order(input) do
+      Parser.parse(input)
+      |> sort(&Hand.compare_hands/2)
+      |> Enum.each(&print_hand/1)
+    end
 
     def solve(input) do
       Parser.parse(input)
@@ -132,6 +136,7 @@ defmodule Mix.Tasks.Day07 do
     {:ok, input} = File.read(input_filename)
 
     IO.puts("--- Part 1 ---")
+    # IO.puts(Day07.Part1.print_order(input))
     IO.puts(Day07.Part1.solve(input))
     IO.puts("")
     # IO.puts("--- Part 2 ---")
