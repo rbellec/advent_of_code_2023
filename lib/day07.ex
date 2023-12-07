@@ -1,12 +1,10 @@
 defmodule Day07 do
-
   defmodule Parser do
     def parse(input) do
-      raw =
-        String.split(input, "\n", trim: true)
-        |> Enum.map(fn line ->
-          String.split(line, " ") |> Day07.Hand.parse_hand()
-        end)
+      String.split(input, "\n", trim: true)
+      |> Enum.map(fn line ->
+        String.split(line, " ") |> Day07.Hand.parse_hand()
+      end)
     end
   end
 
@@ -48,31 +46,46 @@ defmodule Day07 do
         end)
 
       # Kepts name because why not ?
-      value =
-        Map.values(hand_counts)
-        |> Enum.sort()
-        |> case do
-          [1] -> {7, :five_of_a_kind}
-          [1, 4] -> {6, :four_of_a_kind}
-          [2, 3] -> {5, :full}
-          [1, 1, 3] -> {4, :brelan}
-          [1, 2, 2] -> {3, :two_pairs}
-          [1, 1, 1, 2] -> {2, :pairs}
-          [1, 1, 1, 1, 1] -> {1, :high_card}
-        end
+
+      Map.values(hand_counts)
+      |> Enum.sort()
+      |> case do
+        [1] -> {7, :five_of_a_kind}
+        [1, 4] -> {6, :four_of_a_kind}
+        [2, 3] -> {5, :full}
+        [1, 1, 3] -> {4, :brelan}
+        [1, 2, 2] -> {3, :two_pairs}
+        [1, 1, 1, 2] -> {2, :pairs}
+        [1, 1, 1, 1, 1] -> {1, :high_card}
+      end
     end
 
-    # def compare_hands(a, b) do
-    #   cond do
-    #     a.
-    # end
+    def compare_hands(a, b) do
+      if a.hand_value == b.hand_value do
+        Enum.zip(a.cards, b.cards)
+        |> Enum.reduce_while(true, fn {a, b}, _acc ->
+          cond do
+            a == b -> {:cont, true}
+            a < b -> {:halt, true}
+            a > b -> {:halt, false}
+          end
+        end)
+      else
+        a.hand_value > b.hand_value
+      end
+    end
   end
 
   defmodule Part1 do
     import Enum
 
     def solve(input) do
-      Parser.parse(input)
+      res =
+        Parser.parse(input)
+        |> sort(&Hand.compare_hands/2)
+        |> map(& &1.bet)
+        |> with_index(&(&1 * (&2 + 1)))
+        |> sum()
     end
   end
 

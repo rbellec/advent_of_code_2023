@@ -10,6 +10,9 @@ defmodule DayO7Test do
     QQQJA 483
     """
 
+    expected_bets_order = [765, 220, 28, 684, 483]
+    expected_part_1_result = 6440
+
     expected_parse_result = [
       %Day07.Hand{
         text_hand: "32T3K",
@@ -50,6 +53,8 @@ defmodule DayO7Test do
 
     %{
       expected_parse_result: expected_parse_result,
+      expected_part_1_result: expected_part_1_result,
+      expected_bets_order: expected_bets_order,
       demo_input_aoc: demo_input_aoc
     }
   end
@@ -64,6 +69,18 @@ defmodule DayO7Test do
   end
 
   describe "Part 1" do
-    import Day07.Part1
+    test "compare and sort hands", context do
+      sorted_bets =
+        Enum.sort(context.expected_parse_result, &Day07.Hand.compare_hands/2)
+        |> Enum.map(& &1.bet)
+
+      assert(sorted_bet = context.expected_bets_order)
+    end
+
+    test "solve", context do
+      result = Day07.Part1.solve(context.demo_input_aoc)
+      # require IEx; IEx.pry()
+      assert(result = context.expected_part_1_result)
+    end
   end
 end
