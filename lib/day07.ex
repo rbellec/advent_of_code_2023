@@ -12,7 +12,7 @@ defmodule Day07 do
     defstruct [:text_hand, :cards, :bet, :hand_value, :hand_name, :hand_composition]
 
     def parse_hand([text_hand, bet]) do
-      cards = String.graphemes(text_hand) |> Enum.map(&card_value/1) |> Enum.sort(:desc)
+      cards = String.graphemes(text_hand) |> Enum.map(&card_value/1)
       {hand_value, hand_name, hand_composition} = value_hand(cards)
 
       %Hand{
@@ -84,16 +84,17 @@ defmodule Day07 do
     # True if hands a < b, false otherwise.
     def compare_hands(a, b) do
       if a.hand_value == b.hand_value do
-        Enum.zip(a.hand_composition, b.hand_composition)
-        |> Enum.reduce_while(true, fn {a, b}, _acc ->
+        Enum.zip(a.cards, b.cards)
+
+        Enum.reduce_while(true, fn {a, b}, _acc ->
           cond do
             a == b -> {:cont, true}
-            a > b -> {:halt, true}
-            a < b -> {:halt, false}
+            a < b -> {:halt, true}
+            a > b -> {:halt, false}
           end
         end)
       else
-        a.hand_value > b.hand_value
+        a.hand_value < b.hand_value
       end
     end
   end
@@ -102,8 +103,9 @@ defmodule Day07 do
     import Enum
 
     def print_hand(hand) do
-
-      IO.puts( "#{hand.hand_name}: #{hand.text_hand} \t[#{join(hand.hand_composition, ", ")}], \t#{join(hand.cards, "-")}")
+      IO.puts(
+        "#{hand.hand_value}: #{hand.text_hand} \t[#{join(hand.hand_composition, ", ")}], \t#{join(hand.cards, "-")}"
+      )
     end
 
     def print_order(input) do
