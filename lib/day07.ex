@@ -85,8 +85,7 @@ defmodule Day07 do
     def compare_hands(a, b) do
       if a.hand_value == b.hand_value do
         Enum.zip(a.cards, b.cards)
-
-        Enum.reduce_while(true, fn {a, b}, _acc ->
+        |> Enum.reduce_while(true, fn {a, b}, _acc ->
           cond do
             a == b -> {:cont, true}
             a < b -> {:halt, true}

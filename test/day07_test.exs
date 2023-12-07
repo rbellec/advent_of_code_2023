@@ -35,54 +35,49 @@ defmodule DayO7Test do
     JJJJ2 41
     """
 
-    own_test_case = """
-    2345J 3
-    2345A 1
-    """
-
     expected_bets_order = [765, 220, 28, 684, 483]
     expected_part_1_result = 6440
 
     expected_parse_result = [
       %Day07.Hand{
         text_hand: "32T3K",
-        cards: ["3", "2", "T", "3", "K"],
+        cards: [3, 2, 10, 3, 13],
         bet: 765,
         hand_value: 2,
         hand_name: :pair,
-        hand_composition: ["3", "T", "K", "2"]
+        hand_composition: [3, 13, 10, 2]
       },
       %Day07.Hand{
         text_hand: "T55J5",
-        cards: ["T", "5", "5", "J", "5"],
+        cards: [10, 5, 5, 11, 5],
         bet: 684,
         hand_value: 4,
         hand_name: :brelan,
-        hand_composition: ["5", "T", "J"]
+        hand_composition: [5, 11, 10]
       },
       %Day07.Hand{
         text_hand: "KK677",
-        cards: ["K", "K", "6", "7", "7"],
+        cards: [13, 13, 6, 7, 7],
         bet: 28,
         hand_value: 3,
         hand_name: :two_pairs,
-        hand_composition: ["K", "7", "6"]
+        hand_composition: [13, 7, 6]
       },
       %Day07.Hand{
         text_hand: "KTJJT",
-        cards: ["K", "T", "J", "J", "T"],
+        cards: ~c"\r\n\v\v\n",
         bet: 220,
         hand_value: 3,
         hand_name: :two_pairs,
-        hand_composition: ["T", "J", "K"]
+        hand_composition: ~c"\v\n\r"
       },
       %Day07.Hand{
         text_hand: "QQQJA",
-        cards: ["Q", "Q", "Q", "J", "A"],
+        cards: [12, 12, 12, 11, 14],
         bet: 483,
         hand_value: 4,
         hand_name: :brelan,
-        hand_composition: ["Q", "J", "A"]
+        hand_composition: [12, 14, 11]
       }
     ]
 
@@ -97,11 +92,10 @@ defmodule DayO7Test do
 
   describe "Parsing hands" do
     import Day07.Parser
-
     test "parse", context do
       res = parse(context.demo_input_aoc)
       # require IEx; IEx.pry()
-      # assert(parse(context.demo_input_aoc) == context.expected_parse_result)
+      assert(parse(context.demo_input_aoc) == context.expected_parse_result)
     end
   end
 
@@ -111,23 +105,19 @@ defmodule DayO7Test do
         Enum.sort(context.expected_parse_result, &Day07.Hand.compare_hands/2)
         |> Enum.map(& &1.bet)
 
-      assert(sorted_bet = context.expected_bets_order)
+      assert(sorted_bets == context.expected_bets_order)
     end
 
     test "test redit example", context do
-      # Day07.Part1.print_order(context.own_test_case)
       # Day07.Part1.print_order("2345J 3\n2345A 1\n")
-      Day07.Part1.print_order(context.redit_other_input)
-      result = Day07.Part1.solve(context.redit_other_input)
-      # # require IEx; IEx.pry()
-      assert(result == 6592)
+      # Day07.Part1.print_order(context.redit_other_input)
+      # require IEx; IEx.pry()
+      assert(Day07.Part1.solve(context.redit_other_input) == 6592)
     end
 
     test "solve", context do
       # Day07.Part1.print_order(context.demo_input_aoc)
-      result = Day07.Part1.solve(context.demo_input_aoc)
-      # require IEx; IEx.pry()
-      assert(result = context.expected_part_1_result)
+      assert(Day07.Part1.solve(context.demo_input_aoc) == context.expected_part_1_result)
     end
   end
 end
