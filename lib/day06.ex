@@ -21,11 +21,10 @@ defmodule Day06 do
       Parser.parse(input)
       |> map(&solve_race/1)
       |> reduce(&(&1 * &2))
-
     end
 
     def solve_race({time, record}) do
-      #Beating the record means going further !
+      # Beating the record means going further !
       epsilon = 0.000001
       distance = record + epsilon
 
@@ -56,7 +55,7 @@ defmodule Day06 do
   defmodule Part2 do
     def solve do
       # no time to adapt parse. Done by hand.
-      race = {59688274, 543102016641022}
+      race = {59_688_274, 543_102_016_641_022}
       Part1.solve_race(race)
     end
   end
@@ -74,6 +73,6 @@ defmodule Mix.Tasks.Day06 do
     IO.puts(Day06.Part1.solve(input))
     IO.puts("")
     IO.puts("--- Part 2 ---")
-    IO.puts(Day06.Part2.solve)
+    IO.puts(Day06.Part2.solve())
   end
 end
