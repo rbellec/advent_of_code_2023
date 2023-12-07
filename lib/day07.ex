@@ -50,7 +50,7 @@ defmodule Day07 do
       Map.values(hand_counts)
       |> Enum.sort()
       |> case do
-        [1] -> {7, :five_of_a_kind}
+        [5] -> {7, :five_of_a_kind}
         [1, 4] -> {6, :four_of_a_kind}
         [2, 3] -> {5, :full}
         [1, 1, 3] -> {4, :brelan}
@@ -80,7 +80,7 @@ defmodule Day07 do
     import Enum
 
     def solve(input) do
-      res =
+
         Parser.parse(input)
         |> sort(&Hand.compare_hands/2)
         |> map(& &1.bet)
@@ -100,12 +100,12 @@ defmodule Mix.Tasks.Day07 do
 
   @spec run(any()) :: :ok
   def run(_) do
-    # input_filename = "inputs/day07.txt"
-    # {:ok, input} = File.read(input_filename)
+    input_filename = "inputs/day07.txt"
+    {:ok, input} = File.read(input_filename)
 
-    # IO.puts("--- Part 1 ---")
-    # IO.puts(Day07.Part1.solve(input))
-    # IO.puts("")
+    IO.puts("--- Part 1 ---")
+    IO.puts(Day07.Part1.solve(input))
+    IO.puts("")
     # IO.puts("--- Part 2 ---")
     # IO.puts(Day07.Part2.solve)
   end
