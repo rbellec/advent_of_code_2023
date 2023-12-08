@@ -12,7 +12,7 @@ defmodule Day08 do
 
     instructions = times(choice([left, right]), min: 1) |> tag(:instructions)
 
-    location = ascii_string([?A..?Z], min: 1)
+    location = ascii_string([?A..?Z, ?0..?9], min: 1)
 
     direction =
       location
@@ -69,8 +69,59 @@ defmodule Day08 do
     end
   end
 
-  # defmodule Part2 do
-  # end
+  defmodule Part2 do
+    def is_starting_location?(location) do
+      String.at(location, 2) == "A"
+    end
+
+    def is_ending_location?(location) do
+      String.at(location, 2) == "Z"
+    end
+
+    # Because `termination_condition` is such a boring name
+    def are_we_there_yet?(location_list) do
+      Enum.all?(location_list, &is_ending_location?/1)
+    end
+
+    def next_location(directions_map, step_direction, current_location) do
+      directions_map |> Map.get(current_location) |> Map.get(step_direction)
+    end
+
+    def next_locations(directions_map, step_direction, current_locations) do
+      Enum.map(current_locations, &next_location(directions_map, step_direction, &1))
+    end
+
+    def solve_brute_force(input) do
+      directions_definitions = Parser.parse_directions(input) |> elem(1) |> hd
+
+      directions_map =
+        directions_definitions.directions
+        |> Enum.into(%{}, &{&1.location, &1})
+
+      starting_locations = directions_map |> Map.keys() |> Enum.filter(&is_starting_location?/1)
+
+      # Seems it could be a good fit for Stream.transform
+      Stream.cycle(directions_definitions.instructions)
+      |> Stream.with_index(1)
+      |> Enum.reduce_while(
+        {nil, starting_locations},
+        fn {step_direction, step_index}, {_, current_locations} ->
+          # require IEx; IEx.pry()
+          next_locations =
+            next_locations(directions_map, step_direction, current_locations) |> Enum.uniq()
+
+          next_acc = {step_index, next_locations}
+
+          if are_we_there_yet?(next_locations) do
+            {:halt, next_acc}
+          else
+            {:cont, next_acc}
+          end
+        end
+      )
+      |> elem(0)
+    end
+  end
 end
 
 defmodule Mix.Tasks.Day08 do
@@ -83,8 +134,8 @@ defmodule Mix.Tasks.Day08 do
     IO.puts("--- Part 1 ---")
     IO.puts(to_string(Day08.Part1.solve(input)))
 
-    # IO.puts("")
-    # IO.puts("--- Part 2 ---")
-    # IO.puts(inspect(Day08.Part2.solve(directions)))
+    IO.puts("")
+    IO.puts("--- Part 2 ---")
+    IO.puts(to_string(Day08.Part2.solve_brute_force(input)))
   end
 end

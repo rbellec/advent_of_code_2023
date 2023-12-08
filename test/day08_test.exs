@@ -22,7 +22,22 @@ defmodule DayO8Test do
     ZZZ = (ZZZ, ZZZ)
     """
 
-    expected_part_1_result = 2
+    expected_example_1_result = 2
+    expected_example_2_result = 6
+
+    demo_part2_input_aoc = """
+    LR
+
+    11A = (11B, XXX)
+    11B = (XXX, 11Z)
+    11Z = (11B, XXX)
+    22A = (22B, XXX)
+    22B = (22C, 22C)
+    22C = (22Z, 22Z)
+    22Z = (22B, 22B)
+    XXX = (XXX, XXX)
+    """
+
     expected_part_2_result = 6
 
     direction_line = "AAA = (BBB, BBB)"
@@ -33,7 +48,9 @@ defmodule DayO8Test do
       expected_parsed_line: expected_parsed_line,
       demo_input_aoc_1: demo_input_aoc_1,
       demo_input_aoc_2: demo_input_aoc_2,
-      expected_part_1_result: expected_part_1_result,
+      expected_example_1_result: expected_example_1_result,
+      expected_example_2_result: expected_example_2_result,
+      demo_part2_input_aoc: demo_part2_input_aoc,
       expected_part_2_result: expected_part_2_result
     }
   end
@@ -59,15 +76,14 @@ defmodule DayO8Test do
     test "solve", context do
       # res = Day08.Part1.solve(context.demo_input_aoc_2)
       # require IEx; IEx.pry()
-      assert(Day08.Part1.solve(context.demo_input_aoc_1) == context.expected_part_1_result)
-      assert(Day08.Part1.solve(context.demo_input_aoc_2) == context.expected_part_2_result)
+      assert(Day08.Part1.solve(context.demo_input_aoc_1) == context.expected_example_1_result)
+      assert(Day08.Part1.solve(context.demo_input_aoc_2) == context.expected_example_2_result)
     end
   end
 
-  # describe "Part 2" do
-  #   test "with AoC example", context do
-  #     # Day07.Part2.print_order(context.redit_other_input)
-  #     assert(Day07.Part2.solve(context.demo_input_aoc_1) == )
-  #   end
-  # end
+  describe "Part 2" do
+    test "solve", context do
+      assert(Day08.Part2.solve(context.demo_part2_input_aoc) == context.expected_part_2_result)
+    end
+  end
 end
