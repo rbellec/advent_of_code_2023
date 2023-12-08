@@ -1,4 +1,5 @@
 %{
+  "math": {:hex, :math, "0.6.0", "69325af99e600123f6d994833502f6d063a2fa8f2786a3c0461fe6c6123a5166", [:mix], [], "hexpm", "2c73a64d64f719ee1f2821d382f3ed63e8e9564e5176d1c8aa777aac49b41bf7"},
   "nimble_parsec": {:hex, :nimble_parsec, "1.4.0", "51f9b613ea62cfa97b25ccc2c1b4216e81df970acd8e16e8d1bdc58fef21370d", [:mix], [], "hexpm", "9c565862810fb383e9838c1dd2d7d2c437b3d13b267414ba6af33e50d2d1cf28"},
   "pathex": {:hex, :pathex, "2.5.2", "808510f6d7978881bbdbe6ced56d4125553171db52f85611baf5f35e773f11e1", [:mix], [], "hexpm", "15a9e5bdb5585d0c9c485b3da97604a64d63cbe0e8972851f567b0dba639f7f3"},
 }

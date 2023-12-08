@@ -121,6 +121,81 @@ defmodule Day08 do
       )
       |> elem(0)
     end
+
+    def path_from(directions_definitions, starting_location) do
+      # require IEx; IEx.pry()
+      instructions_length = directions_definitions.instructions_length
+      directions_map = directions_definitions.directions_map
+
+      # visited is a Map of tuples with {location letters, index in instructions} => index in stream
+      # Since we are only interested in ending node, this map will only references them.
+      initial_acc = {%{}, starting_location}
+
+      Stream.cycle(directions_definitions.instructions)
+      |> Stream.with_index(1)
+      |> Enum.reduce_while(
+        initial_acc,
+        fn {step_direction, step_count}, {visited, current_location} ->
+          next_location =
+            directions_map |> Map.get(current_location) |> Map.get(step_direction)
+
+          unless is_ending_location?(current_location) do
+            # not an ending node ? Continue.
+            {:cont, {visited, next_location}}
+          else
+            step_index_in_instructions = rem(step_count, instructions_length)
+            key = {current_location, step_index_in_instructions}
+            # require IEx; IEx.pry()
+
+            if Map.has_key?(visited, key) do
+              first_occurence = Map.get(visited, key)
+              cycle_length = step_count - first_occurence
+
+              result = %{
+                visited: visited,
+                first_occurence: first_occurence,
+                last_occurence: step_count,
+                cycle_length: cycle_length,
+                location: current_location
+              }
+
+              {:halt, result}
+            else
+              {:cont, {Map.put(visited, key, step_count), next_location}}
+            end
+          end
+        end
+      )
+    end
+
+    def solve(input) do
+      directions_definitions = Parser.parse_directions(input) |> elem(1) |> hd
+
+      directions_map =
+        directions_definitions.directions
+        |> Enum.into(%{}, &{&1.location, &1})
+
+      extended_definition =
+        directions_definitions
+        |> Map.put(:instructions_length, Enum.count(directions_definitions.instructions))
+        |> Map.put(:directions_map, directions_map)
+
+      starting_locations = directions_map |> Map.keys() |> Enum.filter(&is_starting_location?/1)
+      # ending_locations = directions_map |> Map.keys() |> Enum.filter(&is_starting_location?/1)
+
+      cycles = Enum.map(starting_locations, &path_from(extended_definition, &1))
+
+      # After examinations, all cycle have only 1 possibiblity.
+      cycle_lenghts =
+        cycles
+        |> Enum.map(& &1.cycle_length)
+
+      # IO.puts(inspect(cycle_lenghts))
+      # require IEx; IEx.pry()
+
+      cycle_lenghts
+      |> Enum.reduce(&Math.lcm(&1, &2))
+    end
   end
 end
 
@@ -136,6 +211,6 @@ defmodule Mix.Tasks.Day08 do
 
     IO.puts("")
     IO.puts("--- Part 2 ---")
-    IO.puts(to_string(Day08.Part2.solve_brute_force(input)))
+    IO.puts(to_string(Day08.Part2.solve(input)))
   end
 end

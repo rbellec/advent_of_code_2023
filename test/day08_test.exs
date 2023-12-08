@@ -63,13 +63,6 @@ defmodule DayO8Test do
       # require IEx; IEx.pry()
       assert(elem(direction(context.direction_line), 1) == context.expected_parsed_line)
     end
-
-    # test "parse file", context do
-    #   data_1 = parse_directions(context.demo_input_aoc_1)
-    #   data_2 = parse_directions(context.demo_input_aoc_2)
-    #   require IEx;      IEx.pry()
-
-    # end
   end
 
   describe "Part 1" do
@@ -83,7 +76,8 @@ defmodule DayO8Test do
 
   describe "Part 2" do
     test "solve", context do
-      assert(Day08.Part2.solve(context.demo_part2_input_aoc) == context.expected_part_2_result)
+      res = Day08.Part2.solve(context.demo_part2_input_aoc)
+      assert(res == context.expected_part_2_result)
     end
   end
 end
