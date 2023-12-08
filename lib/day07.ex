@@ -131,15 +131,16 @@ defmodule Day07 do
 
       # Order card by their number of occurence. Take the first that is not a joker (unless there are only jokers)
 
-      joker_value = Enum.sort_by(hand.cards, &Map.get(hand.quantity_by_card_values, &1), :desc)
-      |> Enum.dedup
-      |> case do
+      joker_value =
+        Enum.sort_by(hand.cards, &Map.get(hand.quantity_by_card_values, &1), :desc)
+        |> Enum.dedup()
+        |> case do
           [^jack] -> jack
           [^jack, other | _] -> other
           [other | _] -> other
         end
 
-        # require IEx; IEx.pry()
+      # require IEx; IEx.pry()
 
       # a replace all jockers by this one before evaluating this hand again. (event in case it's JJJJJ case)
       evaluation_cards =
