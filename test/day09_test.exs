@@ -53,4 +53,12 @@ defmodule DayO9Test do
       # require IEx; IEx.pry()
     end
   end
+
+  describe "Part 2" do
+    test "part 2", context do
+      res = Day09.Part2.solve(context.aoc_example)
+      # require IEx; IEx.pry()
+      assert(2 == res)
+    end
+  end
 end

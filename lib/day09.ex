@@ -3,7 +3,7 @@
 # I initially wanted to work with Elixir Stream, but I completely misunderstood how they works.
 # Stream does not "consume" when you get their elements.
 # iex(16)> stream=Stream.iterate(1, fn previous -> (previous + 1) end)
-#Function<63.53678557/2 in Stream.unfold/2>
+# Function<63.53678557/2 in Stream.unfold/2>
 # iex(17)> stream |> Enum.take(10)
 # [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 # iex(18)> stream |> Enum.take(10)
@@ -52,15 +52,12 @@ defmodule Day09 do
       []
     end
 
-
     # rebuild(5, [1, 2, 3]) returns [6, 8, 11].
     # initial value must be placed in front by the calling function.
-    def rebuild(previous_value, [increment|tail]) do
+    def rebuild(previous_value, [increment | tail]) do
       current_value = previous_value + increment
-      [ current_value | rebuild(current_value, tail)]
+      [current_value | rebuild(current_value, tail)]
     end
-
-
 
     # Rebuild just adding a 0
     def rebuild_from_derivations([zeros | derivatives]) do
@@ -80,7 +77,6 @@ defmodule Day09 do
       |> add_a_0_and_rebuild()
     end
 
-
     def solve(input) do
       res =
         input
@@ -91,8 +87,31 @@ defmodule Day09 do
     end
   end
 
-  defmodule Part1.TestStreams do
+  defmodule Part2 do
+    def solve(input) do
+      res =
+        input
+        |> Day09.Parser.parse()
+        |> Enum.map(&Enum.reverse/1)
+        |> Enum.map(&Part1.solve_line/1)
+        |> Enum.map(&List.last/1)
+        |> Enum.sum()
+    end
+  end
+end
 
+defmodule Mix.Tasks.Day09 do
+  use Mix.Task
 
+  def run(_) do
+    input_filename = "inputs/day09.txt"
+    {:ok, input} = File.read(input_filename)
+
+    IO.puts("--- Part 1 ---")
+    IO.puts(to_string(Day09.Part1.solve(input)))
+
+    # IO.puts("")
+    IO.puts("--- Part 2 ---")
+    IO.puts(to_string(Day09.Part2.solve(input)))
   end
 end
