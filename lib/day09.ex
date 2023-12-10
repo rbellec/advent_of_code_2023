@@ -1,3 +1,5 @@
+# I avoided doing the math and think it would take more time if I had to confront the basic of
+# integration against just working with addition and iterations.
 # I initially wanted to work with Elixir Stream, but I completely misunderstood how they works.
 # Stream does not "consume" when you get their elements.
 # iex(16)> stream=Stream.iterate(1, fn previous -> (previous + 1) end)
@@ -8,6 +10,7 @@
 # [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 #
 # Where 0 expected the second call to start at 11.
+# So I came back to a simple recursive “integration".
 
 defmodule Day09 do
   defmodule Parser do
@@ -45,49 +48,36 @@ defmodule Day09 do
       end)
     end
 
-    # Stream does not work as I expected. stream |> Enum.take(5) will return the 5 first elements of stream everytime and not "consume" them.
-    # def next_element_in(stream) do
-    #   stream
-    #   |> Enum.take(1)
-    #   |> hd
-    # end
-
-    # def integrale_stream(initial_constant, previous_stream) do
-    #   next_value_generator = fn
-    #     previous_value -> previous_value + next_element_in(previous_stream)
-    #   end
-    #   # require IEx; IEx.pry()
-    #   Stream.iterate(initial_constant, &(next_value_generator.(&1)))
-    #   # require IEx; IEx.pry()
-    # end
-
-    # def zero_stream do
-    #   Stream.repeatedly(fn -> 0 end)
-    # end
-
     def rebuild(_, []) do
       []
     end
 
+
+    # rebuild(5, [1, 2, 3]) returns [6, 8, 11].
+    # initial value must be placed in front by the calling function.
     def rebuild(previous_value, [increment|tail]) do
       current_value = previous_value + increment
       [ current_value | rebuild(current_value, tail)]
     end
 
+
+
+    # Rebuild just adding a 0
     def rebuild_from_derivations([zeros | derivatives]) do
       List.foldl(derivatives, zeros, fn [initial_value | _], previous_integral_stream ->
-        rebuild(initial_value, previous_integral_stream)
+        [initial_value | rebuild(initial_value, previous_integral_stream)]
       end)
+    end
+
+    def add_a_0_and_rebuild([zeros | derivatives]) do
+      rebuild_from_derivations([[0 | zeros] | derivatives])
     end
 
     # Code kept to help reader undestand
     def solve_line(line) do
       line
       |> all_derivations()
-      |> rebuild_from_derivations()
-      # 0 based !!
-      # |> Enum.fetch(Enum.count(line))
-      # |> elem(1)
+      |> add_a_0_and_rebuild()
     end
 
 
@@ -96,9 +86,8 @@ defmodule Day09 do
         input
         |> Day09.Parser.parse()
         |> Enum.map(&solve_line/1)
-
-      require IEx
-      IEx.pry(); res |> Enum.sum()
+        |> Enum.map(&List.last/1)
+        |> Enum.sum()
     end
   end
 
