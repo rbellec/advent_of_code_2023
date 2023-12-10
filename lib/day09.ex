@@ -1,3 +1,14 @@
+# I initially wanted to work with Elixir Stream, but I completely misunderstood how they works.
+# Stream does not "consume" when you get their elements.
+# iex(16)> stream=Stream.iterate(1, fn previous -> (previous + 1) end)
+#Function<63.53678557/2 in Stream.unfold/2>
+# iex(17)> stream |> Enum.take(10)
+# [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+# iex(18)> stream |> Enum.take(10)
+# [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+#
+# Where 0 expected the second call to start at 11.
+
 defmodule Day09 do
   defmodule Parser do
     import Enum
@@ -34,24 +45,38 @@ defmodule Day09 do
       end)
     end
 
-    def next_element_in(stream) do
-      stream
-      |> Enum.take(1)
-      |> hd
+    # Stream does not work as I expected. stream |> Enum.take(5) will return the 5 first elements of stream everytime and not "consume" them.
+    # def next_element_in(stream) do
+    #   stream
+    #   |> Enum.take(1)
+    #   |> hd
+    # end
+
+    # def integrale_stream(initial_constant, previous_stream) do
+    #   next_value_generator = fn
+    #     previous_value -> previous_value + next_element_in(previous_stream)
+    #   end
+    #   # require IEx; IEx.pry()
+    #   Stream.iterate(initial_constant, &(next_value_generator.(&1)))
+    #   # require IEx; IEx.pry()
+    # end
+
+    # def zero_stream do
+    #   Stream.repeatedly(fn -> 0 end)
+    # end
+
+    def rebuild(_, []) do
+      []
     end
 
-    def integrale_stream(initial_constant, previous_stream) do
-      # fn previous_value -> next_element_in(previous_stream) + previous_value end
-      Stream.iterate(initial_constant, &(next_element_in(previous_stream) + &1))
+    def rebuild(previous_value, [increment|tail]) do
+      current_value = previous_value + increment
+      [ current_value | rebuild(current_value, tail)]
     end
 
-    def zero_stream do
-      Stream.repeatedly(fn -> 0 end)
-    end
-
-    def rebuilt_from_derivations([zeros | derivatives]) do
-      List.foldl(derivatives, zero_stream(), fn [initial_value| _], previous_integral_stream ->
-        integrale_stream(initial_value, previous_integral_stream)
+    def rebuild_from_derivations([zeros | derivatives]) do
+      List.foldl(derivatives, zeros, fn [initial_value | _], previous_integral_stream ->
+        rebuild(initial_value, previous_integral_stream)
       end)
     end
 
@@ -59,17 +84,26 @@ defmodule Day09 do
     def solve_line(line) do
       line
       |> all_derivations()
-      |> rebuilt_from_derivations()
-      |> Enum.fetch(Enum.count(line)) # 0 based !!
-      |> elem(1)
+      |> rebuild_from_derivations()
+      # 0 based !!
+      # |> Enum.fetch(Enum.count(line))
+      # |> elem(1)
     end
 
-    def solved_line(line) do
-      line
-      |> all_derivations()
-      |> rebuilt_from_derivations()
-      |> Enum.take(1 + Enum.count(line))
+
+    def solve(input) do
+      res =
+        input
+        |> Day09.Parser.parse()
+        |> Enum.map(&solve_line/1)
+
+      require IEx
+      IEx.pry(); res |> Enum.sum()
     end
+  end
+
+  defmodule Part1.TestStreams do
+
 
   end
 end
