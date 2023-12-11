@@ -78,24 +78,23 @@ defmodule Day09 do
     end
 
     def solve(input) do
-      res =
-        input
-        |> Day09.Parser.parse()
-        |> Enum.map(&solve_line/1)
-        |> Enum.map(&List.last/1)
-        |> Enum.sum()
+      input
+      |> Day09.Parser.parse()
+      |> Enum.map(&solve_line/1)
+      |> Enum.map(&List.last/1)
+      |> Enum.sum()
     end
   end
 
   defmodule Part2 do
+    @spec solve(binary()) :: number()
     def solve(input) do
-      res =
-        input
-        |> Day09.Parser.parse()
-        |> Enum.map(&Enum.reverse/1)
-        |> Enum.map(&Part1.solve_line/1)
-        |> Enum.map(&List.last/1)
-        |> Enum.sum()
+      input
+      |> Day09.Parser.parse()
+      |> Enum.map(&Enum.reverse/1)
+      |> Enum.map(&Part1.solve_line/1)
+      |> Enum.map(&List.last/1)
+      |> Enum.sum()
     end
   end
 end
