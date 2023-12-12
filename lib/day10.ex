@@ -4,35 +4,47 @@ defmodule Day10 do
   defmodule Parser do
     import Enum
 
-    @graph_chars String.graphemes("|-LJ7FS")
+    # @graph_chars String.graphemes("|-LJ7FS")
 
     def parse(input) do
-      input
-      |> String.split("\n", trim: true)
-      |> with_index()
-      |> reduce(%{}, fn {line, y}, graph_elements ->
-        line
-        |> String.graphemes()
+      lines =
+        input
+        |> String.split("\n", trim: true)
+
+      graph =
+        lines
         |> with_index()
-        |> reduce(graph_elements, fn
-          {"S", x}, graph_elements_c ->
-            graph_elements_c
-            |> Map.put({x, y}, "S")
-            |> Map.put(:start, {x, y})
+        |> reduce(%{}, fn {line, y}, graph_elements ->
+          line
+          |> String.graphemes()
+          |> with_index()
+          |> reduce(graph_elements, fn
+            {"S", x}, graph_elements_c ->
+              graph_elements_c
+              |> Map.put({x, y}, "S")
+              |> Map.put(:start, {x, y})
 
-          {letter, x}, graph_elements_c
-          when letter in ["|", "-", "L", "J", "7", "F"] ->
-            Map.put(graph_elements_c, {x, y}, letter)
+            {letter, x}, graph_elements_c
+            when letter in ["|", "-", "L", "J", "7", "F"] ->
+              Map.put(graph_elements_c, {x, y}, letter)
 
-          _, graph_elements_c ->
-            graph_elements_c
+            _, graph_elements_c ->
+              graph_elements_c
+          end)
         end)
-      end)
+
+      graph
+      |> Map.put(:max_y, Enum.count(lines))
+      |> Map.put(:max_x, lines |> hd |> String.length())
     end
   end
 
   defmodule Graph do
     import Enum
+
+    def get_starting_node(graph) do
+      Map.get(graph, :start)
+    end
 
     def open_pipes(letter) do
       case letter do
@@ -140,6 +152,31 @@ defmodule Day10 do
 
       {opposite(outgoing_direction), next_coords}
     end
+
+    def find_letter_to_connect(opened_pipes) do
+      opened_pipes
+      |> Enum.sort()
+      |> case do
+        [:north, :south] -> "|"
+        [:east, :west] -> "-"
+        [:south, :west] -> "7"
+        [:north, :west] -> "J"
+        [:east, :south] -> "F"
+        [:east, :north] -> "L"
+      end
+    end
+
+    # I need to be able to treat start node as a letter node for part 2 (and would have been interesting for part 1)
+    def transform_start_node(graph) do
+      start_coords = get_starting_node(graph)
+
+      letter =
+        node_connexions(graph, start_coords)
+        |> Enum.map(&elem(&1, 0))
+        |> find_letter_to_connect
+
+      Map.put(graph, start_coords, letter)
+    end
   end
 
   defmodule Part1 do
@@ -152,15 +189,63 @@ defmodule Day10 do
       graph = Day10.Parser.parse(input)
       start_node = Map.get(graph, :start)
 
-      path_length = Day10.Graph.walk_from(graph, start_node)
-      |> Enum.count()
+      path_length =
+        Day10.Graph.walk_from(graph, start_node)
+        |> Enum.count()
 
       Float.ceil(path_length / 2)
     end
   end
 
-  # defmodule Part2 do
-  # end
+  defmodule Part2 do
+    import Enum
+
+    @pointing_north String.graphemes("|LJ")
+
+    def solve(input) do
+      graph =
+        Day10.Parser.parse(input)
+        |> Day10.Graph.transform_start_node()
+
+      start_coords = Day10.Graph.get_starting_node(graph)
+
+      path_nodes =
+        Day10.Graph.walk_from(graph, start_coords)
+        |> map(&elem(&1, 1))
+        |> MapSet.new()
+
+      lines_range = 0..(Map.get(graph, :max_y) - 1)
+
+      flat_map(lines_range, &solve_line(graph, path_nodes, &1))
+      |> Enum.count()
+    end
+
+    def inside_reducer(graph, path_nodes, current_coords, {is_inside, nodes_inside_loop}) do
+      # IO.puts("#{inspect(current_coords)}, is inside: #{inspect(is_inside)}")
+      cond do
+        MapSet.member?(path_nodes, current_coords) ->
+          if Map.get(graph, current_coords) in @pointing_north do
+            {!is_inside, nodes_inside_loop}
+          else
+            {is_inside, nodes_inside_loop}
+          end
+
+        is_inside ->
+          {is_inside, [current_coords | nodes_inside_loop]}
+
+        true ->
+          {is_inside, nodes_inside_loop}
+      end
+    end
+
+    # Return coords of all nodes inside the loop.
+    def solve_line(graph, path_nodes, y) do
+      cols_range = 0..(Map.get(graph, :max_x) - 1)
+
+      Enum.reduce(cols_range, {false, []}, &inside_reducer(graph, path_nodes, {&1, y}, &2))
+      |> elem(1)
+    end
+  end
 end
 
 defmodule Mix.Tasks.Day10 do
@@ -173,8 +258,8 @@ defmodule Mix.Tasks.Day10 do
     IO.puts("--- Part 1 ---")
     IO.puts(to_string(Day10.Part1.solve(input)))
 
-    # IO.puts("")
-    # IO.puts("--- Part 2 ---")
-    # IO.puts(to_string(Day10.Part2.solve(input)))
+    IO.puts("")
+    IO.puts("--- Part 2 ---")
+    IO.puts(to_string(Day10.Part2.solve(input)))
   end
 end

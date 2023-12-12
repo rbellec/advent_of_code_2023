@@ -19,7 +19,9 @@ defmodule Day10Test do
       {2, 3} => "-",
       {3, 1} => "7",
       {3, 2} => "|",
-      {3, 3} => "J"
+      {3, 3} => "J",
+      :max_x => 5,
+      :max_y => 5
     }
 
     aoc_example_1_bis = """
@@ -38,6 +40,18 @@ defmodule Day10Test do
     LJ.LJ
     """
 
+    aoc_part2_exemple_1 = """
+    ...........
+    .S-------7.
+    .|F-----7|.
+    .||OOOOO||.
+    .||OOOOO||.
+    .|L-7OF-J|.
+    .|II|O|II|.
+    .L--JOL--J.
+    .....O.....
+    """
+
     expected_aoc_example_result = 0
 
     %{
@@ -45,7 +59,8 @@ defmodule Day10Test do
       parsed_example_1: parsed_example_1,
       aoc_example_1_bis: aoc_example_1_bis,
       aoc_example_2: aoc_example_2,
-      expected_aoc_example_result: expected_aoc_example_result
+      expected_aoc_example_result: expected_aoc_example_result,
+      aoc_part2_exemple_1: aoc_part2_exemple_1
     }
   end
 
@@ -65,22 +80,22 @@ defmodule Day10Test do
           Day10.Graph.node_connexions(parsed_graph, Map.get(parsed_graph, :start))
       )
 
-      graph = Day10.Graph.add_vertices(parsed_graph)
+      Day10.Graph.add_vertices(parsed_graph)
       # require IEx; IEx.pry()
     end
 
     test "Doing one step", context do
       graph = context.parsed_example_1
       start_node = Map.get(graph, :start)
-      res = Day10.Graph.step(graph, start_node, :south)
+      # res = Day10.Graph.step(graph, start_node, :south)
       assert({:west, {2, 1}} == Day10.Graph.step(graph, start_node, :south))
       # require IEx; IEx.pry()
     end
 
     test "Step to start node", context do
       graph = context.parsed_example_1
-      start_node = {1, 1}
-      res = Day10.Graph.step(graph, {2, 1}, :east)
+      # start_node = {1, 1}
+      # res = Day10.Graph.step(graph, {2, 1}, :east)
       # require IEx; IEx.pry()
       assert({:east, {1, 1}} == Day10.Graph.step(graph, {2, 1}, :east))
     end
@@ -93,6 +108,20 @@ defmodule Day10Test do
 
       assert(8 == Enum.count(res))
     end
+
+    test "find letter matching pipe pattern" do
+      letters = String.graphemes("|-LJ7F")
+
+      letters
+      |> Enum.each(fn letter ->
+        assert(letter == Day10.Graph.find_letter_to_connect(Day10.Graph.open_pipes(letter)))
+      end)
+    end
+
+    test "change start node", context do
+      graph = Day10.Graph.transform_start_node(context.parsed_example_1)
+      assert("F" == Map.get(graph, Day10.Graph.get_starting_node(graph)))
+    end
   end
 
   describe "Part 1" do
@@ -104,10 +133,8 @@ defmodule Day10Test do
   end
 
   describe "Part 2" do
-    # test "part 2", context do
-    # res = Day10.Part2.solve(context.aoc_example)
-    # require IEx; IEx.pry()
-    # assert(_ == res)
-    # end
+    test "part 2", context do
+      assert(4 == Day10.Part2.solve(context.aoc_part2_exemple_1))
+    end
   end
 end
