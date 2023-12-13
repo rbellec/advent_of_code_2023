@@ -35,9 +35,9 @@ defmodule Day12 do
 
     # Take the line and a group size. for each char on the line, return the number of possibiles positions of a group of this size in the string
     # from this position.
-    def possible_placements_from_position(line, group_size) do
+    def possible_placements_from_position(springs, group_size) do
       # Reduce on a reversed list to work to stay in linear time.
-      Enum.reverse(line)
+      Enum.reverse(springs)
       |> Enum.reduce({0, []}, fn position_value, {successives, previous_counts} ->
         # IO.puts(inspect({successives, previous_counts}))
         previous_placement_counts =
@@ -49,15 +49,25 @@ defmodule Day12 do
         case {position_value, successives} do
           {e, s} when e in @possibly_damaged and s >= group_size - 1 ->
             {group_size, [1 + previous_placement_counts | previous_counts]}
-
           {e, s} when e in @possibly_damaged ->
             {s + 1, [previous_placement_counts | previous_counts]}
-
           _ ->
             {0, [previous_placement_counts | previous_counts]}
         end
       end)
       |> elem(1)
+    end
+
+    def possibility_per_group_size_matrix(springs, groups) do
+      Enum.uniq(groups)
+      |> Enum.flat_map( fn group_size ->
+        possible_placements_from_position(springs, group_size)
+        |> Enum.with_index()
+        |> Enum.map(fn {possible_positions, x} ->
+          {{group_size, x}, possible_positions}
+        end)
+      end)
+      |> Map.new()
     end
 
     # def possible_positions(line, group_size) do
