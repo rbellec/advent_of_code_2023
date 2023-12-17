@@ -3,11 +3,10 @@ defmodule Day12 do
     import Enum
 
     def parse(input) do
-      lines =
-        input
-        |> String.split("\n", trim: true)
-        |> with_index
-        |> parse_line()
+      input
+      |> String.split("\n", trim: true)
+      |> with_index
+      |> parse_line()
     end
 
     def parse_line({line, line_index}) do
@@ -49,8 +48,10 @@ defmodule Day12 do
         case {position_value, successives} do
           {e, s} when e in @possibly_damaged and s >= group_size - 1 ->
             {group_size, [1 + previous_placement_counts | previous_counts]}
+
           {e, s} when e in @possibly_damaged ->
             {s + 1, [previous_placement_counts | previous_counts]}
+
           _ ->
             {0, [previous_placement_counts | previous_counts]}
         end
@@ -60,7 +61,7 @@ defmodule Day12 do
 
     def possibility_per_group_size_matrix(springs, groups) do
       Enum.uniq(groups)
-      |> Enum.flat_map( fn group_size ->
+      |> Enum.flat_map(fn group_size ->
         possible_placements_from_position(springs, group_size)
         |> Enum.with_index()
         |> Enum.map(fn {possible_positions, x} ->
