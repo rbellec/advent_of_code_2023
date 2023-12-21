@@ -1,5 +1,14 @@
 defmodule Day13 do
   import Enum
+
+  # 0 for part 1, 1 for part 2
+  @allowed_differences 0
+
+  # Finally using part as a module constant. Count the number of differences between two rows/lines.
+  def differences(a, b) do
+    zip(map([a, b], &String.graphemes/1))
+    |> count(fn {i, j} -> i != j end)
+  end
   # I now am 4 day late, so I'll definitely go to the simplest
   def parse(input) do
     String.split(input, "\n\n", trim: true)
@@ -18,15 +27,19 @@ defmodule Day13 do
     Enum.zip(mirror_field, tl(mirror_field))
     # {{row 0, row 1}, index of row 0}
     |> Enum.with_index()
-    |> Enum.filter(fn {{r0, r1}, _} -> r0 == r1 end)
+    # |> Enum.filter(fn {{r0, r1}, _} -> r0 == r1 end)
+    |> Enum.filter(fn {{r0, r1}, _} -> differences(r0, r1) <= @allowed_differences end)
     |> Enum.map(&elem(&1, 1))
   end
 
   def check_reflexion(mirror_field, index) do
     {left, right} = Enum.split(mirror_field, index + 1)
 
-    Enum.zip(Enum.reverse(left), right)
-    |> Enum.all?(fn {l, r} -> l == r end)
+    differences = zip(Enum.reverse(left), right)
+    |> map(fn {l, r} -> differences(l, r) end)
+    |> sum()
+
+    differences <= @allowed_differences
   end
 
   def find_reflexions(mirror_field) do
